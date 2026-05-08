@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from "react";
 import { LogoIcon } from "./LogoIcon";
-import { ArrowRight, Discord, Twitter, Linkedin, Github } from "lucide-react";
+import { ArrowRight, Twitter, Linkedin, Github, Mail } from "lucide-react";
 
 export const Footer = () => {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -75,7 +75,7 @@ export const Footer = () => {
               Stay in touch!
             </span>
             <div className="flex gap-2">
-              {[Discord, Twitter, Linkedin, Github].map((Icon, i) => (
+              {[Twitter, Linkedin, Github, Mail].map((Icon, i) => (
                 <div
                   key={i}
                   className="w-9 h-9 rounded-xl bg-[#0e1014] hover:bg-black flex items-center justify-center transition-all cursor-pointer hover:-translate-y-0.5 shadow-lg group"
