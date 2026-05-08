@@ -9,6 +9,7 @@ import ShareButton from "@/components/ShareButton";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AuditResultsSkeleton } from "@/components/LoadingSkeleton";
 import { LogoIcon } from "@/components/LogoIcon";
+import { Footer } from "@/components/Footer";
 
 interface AuditClientProps {
   id: string;
@@ -176,23 +177,11 @@ export default function AuditClient({ id }: AuditClientProps) {
                   <LeadCaptureModal auditId={id} />
                 </div>
               </section>
-
-              {/* Footer CTA */}
-              <section className="text-center py-12 border-t border-gray-200 mt-20">
-                <p className="text-gray-400 text-sm font-medium mb-8">
-                  Built for engineering teams paying too much for AI.
-                </p>
-                <Link 
-                  href="/"
-                  className="text-black font-bold text-lg border-b-2 border-black/20 hover:border-black transition-all"
-                >
-                  Run another audit →
-                </Link>
-              </section>
             </div>
           ) : null}
         </ErrorBoundary>
       </main>
+      <Footer />
     </div>
   );
 }

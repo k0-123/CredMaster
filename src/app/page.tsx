@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { ArrowRight, Menu, X } from "lucide-react";
 import { LogoIcon } from "@/components/LogoIcon";
 import SpendForm from "@/components/SpendForm";
+import { Footer } from "@/components/Footer";
 
 export default function LandingPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -232,41 +233,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-[#F5F5F5] border-t border-gray-200 py-16 px-6">
-        <div className="max-w-[88rem] mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-2">
-              <LogoIcon className="w-7 h-7 text-black" />
-              <span className="text-2xl font-medium tracking-tight text-black">CredMaster</span>
-            </div>
-            <p className="text-gray-500 text-sm max-w-xs">
-              Building the future of enterprise AI spend intelligence. Built for lean engineering teams.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-16">
-            <div className="flex flex-col gap-4">
-              <span className="text-black font-semibold text-sm uppercase tracking-wider">Product</span>
-              <a href="#" className="text-gray-500 hover:text-black transition-colors text-sm">Audit Engine</a>
-              <a href="#" className="text-gray-500 hover:text-black transition-colors text-sm">Integrations</a>
-              <a href="#" className="text-gray-500 hover:text-black transition-colors text-sm">Enterprise</a>
-            </div>
-            <div className="flex flex-col gap-4">
-              <span className="text-black font-semibold text-sm uppercase tracking-wider">Company</span>
-              <a href="#" className="text-gray-500 hover:text-black transition-colors text-sm">About</a>
-              <a href="#" className="text-gray-500 hover:text-black transition-colors text-sm">Blog</a>
-              <a href="#" className="text-gray-500 hover:text-black transition-colors text-sm">Privacy</a>
-            </div>
-          </div>
-        </div>
-        <div className="max-w-[88rem] mx-auto mt-16 pt-8 border-t border-gray-100 flex justify-between items-center text-xs text-gray-400">
-          <span>© 2025 CredMaster AI. All rights reserved.</span>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-black">Twitter</a>
-            <a href="#" className="hover:text-black">LinkedIn</a>
-          </div>
-        </div>
-      </footer>
+      {/* Premium Footer */}
+      <Footer />
 
       {/* Audit Form Modal */}
       {isFormOpen && (
