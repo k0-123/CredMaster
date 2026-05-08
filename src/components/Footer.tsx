@@ -40,7 +40,7 @@ export const Footer = () => {
   }, []);
 
   return (
-    <section className="footer-section bg-[#F5F5F5] pt-16 pb-20 px-6 overflow-hidden flex flex-col items-center">
+    <section className="footer-section bg-[#F5F5F5] pt-16 pb-0 px-6 overflow-hidden flex flex-col items-center">
       <div className="footer-wrapper w-full max-w-[1150px] mx-auto grid grid-cols-1 md:grid-cols-[350px_1fr] gap-4 items-stretch relative z-10">
         
         {/* Left Card — Video Background */}
@@ -153,8 +153,8 @@ export const Footer = () => {
         </div>
       </div>
 
-      {/* Massive Watermark — Now with symmetrical top and bottom gaps */}
-      <div className="footer-watermark w-full max-w-[1250px] mx-auto mt-32 mb-32 pointer-events-none select-none relative z-0" aria-hidden="true">
+      {/* Massive Watermark — Now flush with zero gaps */}
+      <div className="footer-watermark w-full max-w-[1250px] mx-auto mt-0 mb-0 pointer-events-none select-none relative z-0" aria-hidden="true">
         <svg ref={svgRef} id="watermarkSvg" className="w-full h-auto overflow-visible" preserveAspectRatio="xMidYMid meet">
           <text 
             ref={textRef}
