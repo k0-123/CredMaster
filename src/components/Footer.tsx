@@ -60,7 +60,7 @@ export const Footer = () => {
             <div className="w-8 h-8 rounded-lg bg-white/15 border-[1.5px] border-white/85 flex items-center justify-center">
               <span className="font-bold text-white text-base tracking-tighter">C</span>
             </div>
-            <span className="text-white text-2xl font-bold tracking-tight">CredMaster</span>
+            <span className="text-white text-2xl font-bold tracking-tight drop-shadow-sm">CredMaster</span>
           </div>
 
           <div className="mt-auto mb-7 relative z-10">
@@ -164,7 +164,7 @@ export const Footer = () => {
             y="240" 
             textAnchor="middle" 
             fontSize="320" 
-            className="font-bold tracking-tighter fill-black/5"
+            className="font-bold tracking-tighter fill-black/15"
             style={{ fontFamily: "'TT Norms Pro', 'Inter', sans-serif" }}
           >
             CredMaster
