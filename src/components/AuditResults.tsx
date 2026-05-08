@@ -11,7 +11,7 @@ export default function AuditResults({ audit }: { audit: AuditResult }) {
       />
 
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-white">Per-Tool Breakdown</h2>
+        <h2 className="text-2xl font-medium text-black tracking-tight" style={{ letterSpacing: "-0.02em" }}>Per-Tool Breakdown</h2>
         {audit.toolResults.map((r) => (
           <ToolBreakdownCard key={r.tool} result={r} />
         ))}

@@ -8,6 +8,7 @@ import LeadCaptureModal from "@/components/LeadCaptureModal";
 import ShareButton from "@/components/ShareButton";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AuditResultsSkeleton } from "@/components/LoadingSkeleton";
+import { LogoIcon } from "@/components/LogoIcon";
 
 interface AuditClientProps {
   id: string;
@@ -83,17 +84,20 @@ export default function AuditClient({ id }: AuditClientProps) {
 
   if (notFound) {
     return (
-      <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold mb-4">Audit not found</h1>
-          <p className="text-slate-400 mb-6">
-            This audit may have expired or the link is invalid.
+      <div className="min-h-screen bg-[#F5F5F5] text-black flex items-center justify-center px-6">
+        <div className="text-center max-w-md">
+          <div className="w-20 h-20 bg-white rounded-3xl shadow-xl flex items-center justify-center mx-auto mb-8">
+            <span className="text-4xl">?</span>
+          </div>
+          <h1 className="text-4xl font-medium mb-4 tracking-tight" style={{ letterSpacing: "-0.03em" }}>Audit not found</h1>
+          <p className="text-gray-500 mb-8 leading-relaxed">
+            This audit may have expired or the link is invalid. Please run a new audit to get fresh results.
           </p>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+            className="inline-flex items-center gap-3 bg-black text-white font-medium px-8 py-4 rounded-full hover:bg-gray-800 transition-all"
           >
-            ← Run a new audit
+            ← Back to Home
           </Link>
         </div>
       </div>
@@ -101,75 +105,94 @@ export default function AuditClient({ id }: AuditClientProps) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      <nav className="border-b border-slate-800/60 backdrop-blur-sm sticky top-0 z-50 bg-slate-950/80">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-3">
-          <Link href="/" className="text-xl font-bold tracking-tight hover:text-indigo-400 transition-colors">
-            CredMaster
+    <div className="min-h-screen bg-[#F5F5F5] text-black">
+      {/* Results Navbar */}
+      <nav className="border-b border-gray-200 backdrop-blur-md sticky top-0 z-50 bg-[#F5F5F5]/80">
+        <div className="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 group">
+            <LogoIcon className="w-6 h-6 text-black" />
+            <span className="text-xl font-medium tracking-tight group-hover:text-gray-600 transition-colors">
+              CredMaster
+            </span>
           </Link>
-          <span className="text-sm text-slate-500 font-medium hidden sm:inline">
-            AI Spend Auditor
-          </span>
+          <div className="flex items-center gap-4">
+             <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 hidden sm:inline">
+              Audit ID: {id.substring(0, 8)}
+            </span>
+            <ShareButton />
+          </div>
         </div>
       </nav>
 
-      <main className="max-w-3xl mx-auto px-6 py-12">
+      <main className="max-w-4xl mx-auto px-6 py-16">
         <ErrorBoundary>
           {loading ? (
-            <AuditResultsSkeleton />
+            <div className="animate-pulse space-y-12">
+               <div className="h-64 bg-white rounded-3xl border border-gray-100" />
+               <div className="space-y-4">
+                  <div className="h-8 w-48 bg-gray-200 rounded-lg" />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="h-48 bg-white rounded-2xl border border-gray-100" />
+                    <div className="h-48 bg-white rounded-2xl border border-gray-100" />
+                  </div>
+               </div>
+            </div>
           ) : audit ? (
             <div className="space-y-12">
+              {/* Main Results */}
               <AuditResults audit={audit} />
 
-              <section className="bg-slate-900/60 border border-slate-800 rounded-xl p-6 shadow-xl shadow-indigo-500/5">
-                <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" />
-                  AI-Powered Summary
+              {/* AI Summary Section */}
+              <section className="bg-white border border-gray-100 rounded-3xl p-8 md:p-12 shadow-xl shadow-gray-200/40 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-2 h-full bg-emerald-500" />
+                <h2 className="text-2xl font-medium text-black mb-6 flex items-center gap-3 tracking-tight" style={{ letterSpacing: "-0.02em" }}>
+                  <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                  AI Intelligence Summary
                 </h2>
                 {summaryLoading && !aiSummary ? (
-                  <div className="flex items-center gap-3 text-slate-400">
-                    <span className="w-5 h-5 border-2 border-slate-600 border-t-indigo-400 rounded-full animate-spin" />
-                    Generating your personalized summary...
+                  <div className="flex items-center gap-4 text-gray-400 font-medium">
+                    <span className="w-5 h-5 border-2 border-gray-100 border-t-black rounded-full animate-spin" />
+                    Analyzing your tool stack pattern...
                   </div>
                 ) : (
-                  <p className="text-slate-300 leading-relaxed italic">
+                  <p className="text-gray-600 text-lg leading-relaxed italic font-medium">
                     &ldquo;{aiSummary}&rdquo;
                   </p>
                 )}
               </section>
 
-              <section className="bg-slate-900/40 border border-slate-800/50 rounded-2xl p-8 text-center">
-                <h2 className="text-2xl font-bold text-white mb-3">
-                  Get this report in your inbox
+              {/* Email Capture Section */}
+              <section className="bg-black rounded-[2.5rem] p-10 md:p-16 text-center text-white relative overflow-hidden">
+                {/* Decorative background glow */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-emerald-500/10 blur-[120px] pointer-events-none" />
+                
+                <h2 className="text-3xl md:text-5xl font-medium mb-6 relative z-10 tracking-tight" style={{ letterSpacing: "-0.03em" }}>
+                  Get the full<br />efficiency report.
                 </h2>
-                <p className="text-slate-400 text-sm mb-8 max-w-md mx-auto">
-                  We&apos;ll email you the full breakdown and notify you when new optimizations apply to your stack.
+                <p className="text-white/60 text-lg mb-10 max-w-md mx-auto relative z-10">
+                  We&apos;ll email you the step-by-step consolidation plan and notify you when new savings apply.
                 </p>
-                <LeadCaptureModal auditId={id} />
+                <div className="relative z-10">
+                  <LeadCaptureModal auditId={id} />
+                </div>
               </section>
 
-              <section className="text-center py-6 border-t border-slate-800/40">
-                <h2 className="text-xl font-semibold text-white mb-2">
-                  Share your results
-                </h2>
-                <p className="text-slate-400 text-sm mb-6">
-                  Share this link — your personal details are never included.
+              {/* Footer CTA */}
+              <section className="text-center py-12 border-t border-gray-200 mt-20">
+                <p className="text-gray-400 text-sm font-medium mb-8">
+                  Built for engineering teams paying too much for AI.
                 </p>
-                <ShareButton />
+                <Link 
+                  href="/"
+                  className="text-black font-bold text-lg border-b-2 border-black/20 hover:border-black transition-all"
+                >
+                  Run another audit →
+                </Link>
               </section>
             </div>
           ) : null}
         </ErrorBoundary>
       </main>
-
-      <footer className="border-t border-slate-800/40 py-10">
-        <div className="max-w-5xl mx-auto px-6 text-center">
-          <p className="text-slate-500 text-sm">
-            Built for engineering teams paying too much for AI.
-          </p>
-          <p className="text-slate-600 text-xs mt-2">© 2025 CredMaster</p>
-        </div>
-      </footer>
     </div>
   );
 }

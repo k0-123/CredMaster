@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useFormPersistence } from "@/hooks/useFormPersistence";
 import type { AuditInput, ToolName, ToolEntry } from "@/lib/types";
 import { PRICING_DATA } from "@/lib/pricingData";
+import { ArrowRight, ChevronLeft, Check } from "lucide-react";
 
 const ALL_TOOLS: { id: ToolName; name: string; color: string; initials: string }[] = [
   { id: "cursor", name: "Cursor", color: "bg-blue-600", initials: "CU" },
@@ -40,8 +41,6 @@ export default function SpendForm() {
   );
   const [hpValue, setHpValue] = useState("");
 
-  // ── Step navigation ──
-
   const goToStep2 = () => setStep(2);
 
   const goToStep3 = () => {
@@ -65,7 +64,6 @@ export default function SpendForm() {
     const tools = [...formData.tools];
     const updated = { ...tools[index], ...patch };
 
-    // Auto-compute monthly spend when plan or seats change
     if (patch.plan !== undefined || patch.seats !== undefined) {
       const pricing = PRICING_DATA[updated.tool];
       const planData = (pricing as Record<string, { pricePerSeat: number | null }>)[updated.plan];
@@ -99,158 +97,119 @@ export default function SpendForm() {
     }
   };
 
-  // ── Render ──
-
   return (
-    <div id="audit-form" className="w-full max-w-2xl mx-auto">
-      <div className="bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl shadow-2xl shadow-indigo-500/5 overflow-hidden">
-        {/* Progress bar */}
-        <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
-          <h3 className="font-semibold text-lg text-white">AI Spend Audit</h3>
-          <div className="flex gap-2">
+    <div id="audit-form" className="w-full">
+      <div className="bg-white rounded-3xl overflow-hidden">
+        {/* Progress header */}
+        <div className="flex items-center justify-between mb-10">
+          <div className="flex gap-1.5">
             {[1, 2, 3].map((s) => (
               <div
                 key={s}
-                className={`w-8 h-1.5 rounded-full transition-colors ${
-                  s <= step ? "bg-indigo-500" : "bg-slate-700"
+                className={`h-1 rounded-full transition-all duration-500 ${
+                  s === step ? "w-8 bg-black" : s < step ? "w-4 bg-black/20" : "w-4 bg-gray-100"
                 }`}
               />
             ))}
           </div>
+          <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">Step {step} of 3</span>
         </div>
 
-        <div className="p-6 md:p-8">
+        <div>
           {/* ═══ STEP 1 — Team context ═══ */}
           {step === 1 && (
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Team Size
-                </label>
-                <input
-                  id="team-size"
-                  type="number"
-                  min={1}
-                  max={500}
-                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
-                  value={formData.teamSize}
-                  onChange={(e) =>
-                    setFormData({ ...formData, teamSize: Math.max(1, +e.target.value || 1) })
-                  }
-                />
+            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Team Size</label>
+                  <input
+                    type="number"
+                    min={1}
+                    className="w-full bg-[#F5F5F5] border-none rounded-2xl px-6 py-4 text-black text-lg font-medium focus:ring-2 focus:ring-black outline-none transition-all"
+                    value={formData.teamSize}
+                    onChange={(e) => setFormData({ ...formData, teamSize: Math.max(1, +e.target.value || 1) })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Engineer Count</label>
+                  <input
+                    type="number"
+                    min={0}
+                    className="w-full bg-[#F5F5F5] border-none rounded-2xl px-6 py-4 text-black text-lg font-medium focus:ring-2 focus:ring-black outline-none transition-all"
+                    value={formData.engineerCount}
+                    onChange={(e) => setFormData({ ...formData, engineerCount: Math.max(0, +e.target.value || 0) })}
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1">
-                  Engineer / Developer Count
-                </label>
-                <p className="text-xs text-slate-500 mb-2">People who write code</p>
-                <input
-                  id="engineer-count"
-                  type="number"
-                  min={0}
-                  max={500}
-                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
-                  value={formData.engineerCount}
-                  onChange={(e) =>
-                    setFormData({ ...formData, engineerCount: Math.max(0, +e.target.value || 0) })
-                  }
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Primary Use Case
-                </label>
-                <select
-                  id="use-case"
-                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
-                  value={formData.primaryUseCase}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      primaryUseCase: e.target.value as AuditInput["primaryUseCase"],
-                    })
-                  }
-                >
-                  <option value="coding">Coding</option>
-                  <option value="writing">Writing / Content</option>
-                  <option value="data">Data Analysis</option>
-                  <option value="research">Research</option>
-                  <option value="mixed">Mixed</option>
-                </select>
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Primary Use Case</label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {["coding", "writing", "data", "research", "mixed"].map((useCase) => (
+                    <button
+                      key={useCase}
+                      onClick={() => setFormData({ ...formData, primaryUseCase: useCase as any })}
+                      className={`px-4 py-3 rounded-2xl text-sm font-medium transition-all ${
+                        formData.primaryUseCase === useCase 
+                          ? "bg-black text-white shadow-xl shadow-black/10" 
+                          : "bg-[#F5F5F5] text-gray-600 hover:bg-gray-200"
+                      }`}
+                    >
+                      {useCase.charAt(0).toUpperCase() + useCase.slice(1)}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <button
-                id="step1-next"
                 onClick={goToStep2}
-                className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 rounded-lg transition-colors"
+                className="w-full bg-black text-white font-medium py-5 rounded-full hover:bg-gray-800 transition-all flex items-center justify-center gap-2 text-lg group"
               >
-                Next &rarr;
+                Continue
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
           )}
 
           {/* ═══ STEP 2 — Tool selection ═══ */}
           {step === 2 && (
-            <div className="space-y-6">
-              <h4 className="text-lg font-medium text-white">
-                Which AI tools is your team paying for?
-              </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {ALL_TOOLS.map((t) => {
                   const on = selectedTools.includes(t.id);
                   return (
                     <button
                       key={t.id}
                       type="button"
-                      onClick={() =>
-                        setSelectedTools((prev) =>
-                          on ? prev.filter((x) => x !== t.id) : [...prev, t.id]
-                        )
-                      }
-                      className={`flex items-center gap-3 p-4 rounded-xl border transition-all text-left ${
-                        on
-                          ? "border-indigo-500 bg-indigo-500/10 ring-1 ring-indigo-500/30"
-                          : "border-slate-700 bg-slate-950 hover:border-slate-600"
+                      onClick={() => setSelectedTools((prev) => on ? prev.filter((x) => x !== t.id) : [...prev, t.id])}
+                      className={`flex flex-col items-center gap-4 p-6 rounded-3xl border-2 transition-all ${
+                        on ? "border-black bg-black text-white" : "border-gray-100 bg-[#F5F5F5] hover:border-gray-200 text-black"
                       }`}
                     >
-                      <div
-                        className={`w-10 h-10 rounded-lg flex items-center justify-center text-xs font-bold text-white ${t.color}`}
-                      >
+                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xs font-bold text-white ${on ? 'bg-white/20' : t.color}`}>
                         {t.initials}
                       </div>
-                      <span className="font-medium text-slate-200 flex-1">{t.name}</span>
-                      <div
-                        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                          on ? "border-indigo-500 bg-indigo-500" : "border-slate-600"
-                        }`}
-                      >
-                        {on && (
-                          <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                        )}
-                      </div>
+                      <span className="font-semibold text-sm text-center">{t.name}</span>
+                      {on && <Check className="w-5 h-5 text-white absolute top-4 right-4" />}
                     </button>
                   );
                 })}
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex gap-4">
                 <button
                   onClick={() => setStep(1)}
-                  className="px-6 py-3 border border-slate-700 hover:bg-slate-800 rounded-lg text-slate-300 font-medium transition-colors"
+                  className="flex items-center justify-center w-16 h-16 rounded-full bg-[#F5F5F5] text-black hover:bg-gray-200 transition-all"
                 >
-                  Back
+                  <ChevronLeft className="w-6 h-6" />
                 </button>
                 <button
-                  id="step2-next"
                   onClick={goToStep3}
                   disabled={selectedTools.length === 0}
-                  className="flex-1 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-lg transition-colors"
+                  className="flex-1 bg-black text-white font-medium py-5 rounded-full hover:bg-gray-800 disabled:opacity-30 transition-all flex items-center justify-center gap-2 text-lg group"
                 >
-                  Next &rarr;
+                  Next Step
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
             </div>
@@ -258,9 +217,7 @@ export default function SpendForm() {
 
           {/* ═══ STEP 3 — Spend details ═══ */}
           {step === 3 && (
-            <div className="space-y-6">
-              <h4 className="text-lg font-medium text-white">Spend details per tool</h4>
-
+            <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
               <div className="space-y-4">
                 {formData.tools.map((entry, i) => {
                   const pricing = PRICING_DATA[entry.tool];
@@ -268,56 +225,43 @@ export default function SpendForm() {
                   const meta = ALL_TOOLS.find((t) => t.id === entry.tool)!;
 
                   return (
-                    <div
-                      key={entry.tool}
-                      className="bg-slate-950 border border-slate-800 rounded-xl p-4"
-                    >
-                      <div className="flex items-center gap-3 mb-4">
-                        <div
-                          className={`w-8 h-8 rounded flex items-center justify-center text-xs font-bold text-white ${meta.color}`}
-                        >
+                    <div key={entry.tool} className="bg-[#F5F5F5] rounded-3xl p-6">
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold text-white ${meta.color}`}>
                           {meta.initials}
                         </div>
-                        <span className="font-medium text-white">{meta.name}</span>
+                        <span className="font-bold text-black text-lg">{meta.name}</span>
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div>
-                          <label className="block text-xs text-slate-500 mb-1">Plan</label>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Plan</label>
                           <select
-                            className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm text-white outline-none"
+                            className="w-full bg-white border-none rounded-xl px-4 py-3 text-sm font-semibold text-black outline-none focus:ring-2 focus:ring-black"
                             value={entry.plan}
                             onChange={(e) => updateTool(i, { plan: e.target.value })}
                           >
-                            {plans.map((p) => (
-                              <option key={p} value={p}>
-                                {p}
-                              </option>
-                            ))}
+                            {plans.map((p) => <option key={p} value={p}>{p}</option>)}
                           </select>
                         </div>
-                        <div>
-                          <label className="block text-xs text-slate-500 mb-1">Seats</label>
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Seats</label>
                           <input
                             type="number"
                             min={1}
-                            className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm text-white outline-none"
+                            className="w-full bg-white border-none rounded-xl px-4 py-3 text-sm font-semibold text-black outline-none focus:ring-2 focus:ring-black"
                             value={entry.seats}
                             onChange={(e) => updateTool(i, { seats: Math.max(1, +e.target.value || 1) })}
                           />
                         </div>
-                        <div>
-                          <label className="block text-xs text-slate-500 mb-1">
-                            Monthly Spend ($)
-                          </label>
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Monthly ($)</label>
                           <input
                             type="number"
                             min={0}
-                            className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-sm text-white outline-none"
+                            className="w-full bg-white border-none rounded-xl px-4 py-3 text-sm font-semibold text-black outline-none focus:ring-2 focus:ring-black"
                             value={entry.monthlySpend}
-                            onChange={(e) =>
-                              updateTool(i, { monthlySpend: Math.max(0, +e.target.value || 0) })
-                            }
+                            onChange={(e) => updateTool(i, { monthlySpend: Math.max(0, +e.target.value || 0) })}
                           />
                         </div>
                       </div>
@@ -326,43 +270,24 @@ export default function SpendForm() {
                 })}
               </div>
 
-              {error && (
-                <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-lg text-sm">
-                  {error}
-                </div>
-              )}
+              {error && <div className="bg-red-50 text-red-500 p-5 rounded-2xl text-sm font-medium border border-red-100">{error}</div>}
 
-              {/* Honeypot — invisible to users */}
-              <input
-                type="text"
-                name="website"
-                className="hidden"
-                tabIndex={-1}
-                aria-hidden="true"
-                autoComplete="off"
-                value={hpValue}
-                onChange={(e) => setHpValue(e.target.value)}
-              />
+              <input type="text" name="website" className="hidden" tabIndex={-1} value={hpValue} onChange={(e) => setHpValue(e.target.value)} />
 
-              <div className="flex gap-3">
+              <div className="flex gap-4">
                 <button
                   onClick={() => setStep(2)}
                   disabled={loading}
-                  className="px-6 py-3 border border-slate-700 hover:bg-slate-800 rounded-lg text-slate-300 font-medium transition-colors"
+                  className="flex items-center justify-center w-16 h-16 rounded-full bg-[#F5F5F5] text-black hover:bg-gray-200 transition-all"
                 >
-                  Back
+                  <ChevronLeft className="w-6 h-6" />
                 </button>
                 <button
-                  id="run-audit"
                   onClick={submit}
                   disabled={loading}
-                  className="flex-1 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 text-white font-semibold py-3 rounded-lg transition-colors flex items-center justify-center gap-2"
+                  className="flex-1 bg-black text-white font-medium py-5 rounded-full hover:bg-gray-800 disabled:opacity-30 transition-all flex items-center justify-center gap-2 text-lg group"
                 >
-                  {loading ? (
-                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  ) : (
-                    "Run My Audit →"
-                  )}
+                  {loading ? <span className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : "Generate Report"}
                 </button>
               </div>
             </div>

@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function SavingsHero({
   savings,
   annualSavings,
@@ -10,52 +12,54 @@ export default function SavingsHero({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl p-8 md:p-12 text-center border ${
+      className={`relative overflow-hidden rounded-3xl p-10 md:p-16 text-center border-2 transition-all ${
         isOptimal || isLow
-          ? "bg-slate-900/60 border-slate-800"
-          : "bg-gradient-to-br from-emerald-950/40 to-slate-900/60 border-emerald-800/40"
+          ? "bg-white border-gray-100 shadow-xl shadow-gray-200/50"
+          : "bg-white border-emerald-100 shadow-2xl shadow-emerald-500/10"
       }`}
     >
-      {/* Decorative glow */}
-      {!isOptimal && !isLow && (
-        <div className="absolute inset-0 bg-emerald-500/5 blur-3xl pointer-events-none" />
-      )}
-
       <div className="relative z-10">
         {isOptimal || isLow ? (
           <>
-            <div className="text-4xl mb-4">✓</div>
-            <h2 className="text-2xl md:text-3xl font-bold text-white">
-              You&apos;re spending well.
+            <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
+              <span className="text-3xl">✓</span>
+            </div>
+            <h2 className="text-3xl md:text-5xl font-medium text-black tracking-tight mb-4" style={{ letterSpacing: "-0.03em" }}>
+              Your stack is optimized.
             </h2>
-            <p className="text-slate-400 mt-2 text-lg">
-              Your stack looks right-sized.
+            <p className="text-gray-500 text-lg max-w-md mx-auto leading-relaxed">
+              Our AI analysis shows your current tool subscriptions are right-sized for your team.
             </p>
           </>
         ) : (
           <>
-            <p className="text-emerald-400/80 font-medium text-sm uppercase tracking-wider mb-3">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-emerald-50 text-emerald-600 font-bold text-xs uppercase tracking-widest mb-6">
               Potential Savings Found
-            </p>
-            <div className="text-5xl md:text-7xl font-extrabold text-emerald-400 tracking-tight">
+            </span>
+            <div 
+              className="text-6xl md:text-8xl font-medium text-black tracking-tighter mb-4"
+              style={{ letterSpacing: "-0.05em" }}
+            >
               ${savings.toLocaleString()}
-              <span className="text-xl md:text-2xl text-emerald-500/70 font-semibold ml-2">
+              <span className="text-2xl md:text-3xl text-gray-300 font-medium ml-3">
                 / month
               </span>
             </div>
-            <div className="text-lg md:text-xl text-emerald-500/60 mt-2 font-medium">
-              ${annualSavings.toLocaleString()} / year
+            <div className="text-xl md:text-2xl text-emerald-600 font-medium tracking-tight">
+              That&apos;s ${annualSavings.toLocaleString()} in annual efficiency.
             </div>
 
             {savings > 500 && (
-              <div className="mt-8 inline-block bg-slate-800/60 border border-slate-700 rounded-xl px-6 py-4">
-                <p className="text-slate-300 text-sm">
-                  Want help capturing all of this?{" "}
+              <div className="mt-12 inline-block bg-[#F5F5F5] rounded-2xl px-8 py-5">
+                <p className="text-gray-600 text-sm font-medium">
+                  Ready to capture these savings?{" "}
                   <a
                     href="https://credex.ai"
-                    className="text-indigo-400 hover:text-indigo-300 font-semibold underline decoration-indigo-400/30 underline-offset-4 transition-colors"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-black font-bold border-b-2 border-black/20 hover:border-black transition-all ml-1"
                   >
-                    Book a free Credex consultation →
+                    Get the CredMaster Playbook →
                   </a>
                 </p>
               </div>
@@ -63,6 +67,11 @@ export default function SavingsHero({
           </>
         )}
       </div>
+      
+      {/* Decorative background element */}
+      {!isOptimal && (
+        <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-emerald-50 rounded-full blur-3xl opacity-50 pointer-events-none" />
+      )}
     </div>
   );
 }

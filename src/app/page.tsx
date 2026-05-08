@@ -1,124 +1,292 @@
+"use client";
+
+import React, { useState } from "react";
+import { ArrowRight, Menu, X } from "lucide-react";
+import { LogoIcon } from "@/components/LogoIcon";
 import SpendForm from "@/components/SpendForm";
 
-export default function Home() {
+export default function LandingPage() {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      {/* ═══ NAVBAR ═══ */}
-      <nav className="border-b border-slate-800/60 backdrop-blur-sm sticky top-0 z-50 bg-slate-950/80">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-3">
-          <span className="text-xl font-bold tracking-tight">CredMaster</span>
-          <span className="text-sm text-slate-500 font-medium hidden sm:inline">
-            AI Spend Auditor
-          </span>
-        </div>
-      </nav>
+    <div className="flex flex-col bg-[#F5F5F5] min-h-screen">
+      {/* 1. Navbar + Hero Section Wrapper */}
+      <div className="h-screen flex flex-col overflow-hidden relative">
+        
+        {/* Navbar */}
+        <nav className="absolute top-0 left-0 right-0 z-50 px-6 py-5">
+          <div className="max-w-[88rem] mx-auto flex items-center justify-between">
+            {/* Left: Logo */}
+            <div className="flex items-center gap-2">
+              <LogoIcon className="w-7 h-7 text-black" />
+              <span className="text-2xl font-medium tracking-tight text-black">CredMaster</span>
+            </div>
 
-      {/* ═══ HERO ═══ */}
-      <section className="max-w-3xl mx-auto px-6 pt-20 pb-16 text-center">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
-          You&apos;re probably wasting{" "}
-          <span className="text-indigo-400">$400/month</span> on AI tools.
-        </h1>
-        <p className="mt-6 text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-          Get a free 60-second audit of your team&apos;s AI subscriptions. See
-          exactly where the waste is.
-        </p>
-        <div className="mt-8">
-          <a
-            href="#audit-form"
-            className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-8 py-4 rounded-xl text-lg transition-colors shadow-lg shadow-indigo-500/20"
-          >
-            Audit My AI Stack →
-          </a>
-          <p className="mt-4 text-sm text-slate-500">
-            No login required. Free forever. Takes 60 seconds.
-          </p>
-        </div>
-      </section>
+            {/* Center: Links */}
+            <div className="hidden md:flex items-center gap-8">
+              {["Audit Engine", "Intelligence", "Security", "Partners", "Pricing"].map((link) => (
+                <a
+                  key={link}
+                  href="#"
+                  className="text-base text-gray-700 hover:text-black font-medium transition-colors duration-200"
+                >
+                  {link}
+                </a>
+              ))}
+            </div>
 
-      {/* ═══ SOCIAL PROOF BAR ═══ */}
-      <section className="border-y border-slate-800/40 bg-slate-900/30 py-8">
-        <div className="max-w-4xl mx-auto px-6">
-          <p className="text-center text-sm text-slate-500 mb-6 uppercase tracking-wider font-medium">
-            Trusted by 200+ engineering teams
-            <span className="text-xs ml-2 text-slate-600">(illustrative)</span>
-          </p>
-          <div className="flex justify-center gap-8 flex-wrap">
-            {[
-              { name: "Acme Corp", color: "bg-blue-900/50 border-blue-800/50" },
-              { name: "TechFlow", color: "bg-purple-900/50 border-purple-800/50" },
-              { name: "DataWave", color: "bg-emerald-900/50 border-emerald-800/50" },
-            ].map((company) => (
-              <div
-                key={company.name}
-                className={`${company.color} border rounded-lg px-6 py-3 text-sm font-medium text-slate-400`}
+            {/* Right: CTA */}
+            <button 
+              onClick={() => setIsFormOpen(true)}
+              className="bg-black text-white text-base font-medium px-7 py-2.5 rounded-full hover:bg-gray-800 transition-colors duration-200"
+            >
+              Run Audit
+            </button>
+          </div>
+        </nav>
+
+        {/* Hero Section */}
+        <section className="flex-1 px-6 pt-20 pb-6 flex items-end">
+          <div className="relative w-full rounded-2xl overflow-hidden max-w-[88rem] mx-auto h-[calc(100vh-96px)]">
+            {/* Background Video */}
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+            >
+              <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260423_161253_c72b1869-400f-45ed-ac0c-52f68c2ed5bd.mp4" type="video/mp4" />
+            </video>
+
+            {/* Content Overlay */}
+            <div className="relative z-10 flex flex-col items-start justify-start h-full p-12 pt-36 bg-gradient-to-r from-[#F5F5F5]/40 to-transparent">
+              <h1 
+                className="text-black text-5xl md:text-7xl font-medium leading-tight max-w-xl mb-4"
+                style={{ letterSpacing: "-0.04em" }}
               >
-                {company.name}
+                Your Spend<br />Works Smarter
+              </h1>
+              <p 
+                className="text-black/70 text-base md:text-xl max-w-md mb-8 leading-relaxed"
+                style={{ fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif" }}
+              >
+                An automated, AI-powered audit engine built for deep spend analysis and effortless savings in your enterprise tool stack.
+              </p>
+
+              {/* Main CTA Pill */}
+              <button 
+                onClick={() => setIsFormOpen(true)}
+                className="inline-flex items-center gap-3 bg-black text-white text-base md:text-lg font-medium pl-8 pr-2 py-2 rounded-full hover:bg-gray-800 transition-all group"
+              >
+                Start Free Audit
+                <div className="bg-white rounded-full p-2 group-hover:translate-x-1 transition-transform">
+                  <ArrowRight className="w-5 h-5 text-black" />
+                </div>
+              </button>
+
+              {/* Hero Marquee */}
+              <div className="mt-auto w-full max-w-2xl overflow-hidden pb-4">
+                <div className="marquee-track">
+                  {[...Array(2)].map((_, i) => (
+                    <React.Fragment key={i}>
+                      <span className="mx-7 text-black/60 font-bold" style={{ fontFamily: "Georgia, serif", fontSize: "15px", letterSpacing: "-0.02em" }}>Stripe</span>
+                      <span className="mx-7 text-black/60 font-black uppercase" style={{ fontFamily: "Arial, sans-serif", fontSize: "13px", letterSpacing: "0.08em" }}>Coinbase</span>
+                      <span className="mx-7 text-black/60 font-semibold italic" style={{ fontFamily: "'Trebuchet MS', sans-serif", fontSize: "15px", letterSpacing: "0.01em" }}>Uniswap</span>
+                      <span className="mx-7 text-black/60 font-bold uppercase" style={{ fontFamily: "'Courier New', monospace", fontSize: "13px", letterSpacing: "0.12em" }}>Aave</span>
+                      <span className="mx-7 text-black/60" style={{ fontFamily: "Palatino, 'Book Antiqua', serif", fontSize: "16px", letterSpacing: "-0.01em" }}>Compound</span>
+                      <span className="mx-7 text-black/60" style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif", fontSize: "14px", letterSpacing: "0.04em" }}>MakerDAO</span>
+                      <span className="mx-7 text-black/60 font-bold" style={{ fontFamily: "Verdana, sans-serif", fontSize: "13px", letterSpacing: "-0.03em" }}>Chainlink</span>
+                    </React.Fragment>
+                  ))}
+                </div>
               </div>
-            ))}
+            </div>
+          </div>
+        </section>
+      </div>
+
+      {/* 2. Info Section ("Meet CredMaster.") */}
+      <section className="bg-[#F5F5F5] px-6 py-24">
+        <div className="max-w-[88rem] mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16 items-start">
+            <div>
+              <h2 
+                className="text-black text-4xl md:text-6xl font-medium leading-tight mb-8"
+                style={{ letterSpacing: "-0.03em" }}
+              >
+                Meet CredMaster.
+              </h2>
+              <button 
+                onClick={() => setIsFormOpen(true)}
+                className="inline-flex items-center gap-3 bg-black text-white text-base font-medium pl-6 pr-2 py-1.5 rounded-full hover:bg-gray-800 transition-all group"
+              >
+                Discover it
+                <div className="bg-white rounded-full p-1.5">
+                  <ArrowRight className="w-4 h-4 text-black" />
+                </div>
+              </button>
+            </div>
+            <div>
+              <p className="text-black/70 text-2xl md:text-4xl leading-relaxed font-normal">
+                CredMaster is a deep-learning auditor that identifies waste in your AI tool subscriptions, consolidating your stack for maximum performance.
+              </p>
+            </div>
+          </div>
+
+          {/* 4-col card grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div 
+              className="lg:col-span-2 rounded-2xl p-7 min-h-80 flex flex-col justify-between relative overflow-hidden group"
+              style={{ 
+                backgroundImage: "url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260423_164207_f243351d-ed59-48ec-83a0-a5e996bdbe3c.png&w=1280&q=85')",
+                backgroundSize: "cover",
+                backgroundPosition: "center"
+              }}
+            >
+              <h3 className="text-black text-3xl font-medium tracking-tight" style={{ letterSpacing: "-0.02em" }}>Savings that bloom</h3>
+              <p className="text-black/70 text-base max-w-xs relative z-10">
+                Gain steady returns as your tooling budgets are routed into higher-efficiency AI platforms.
+              </p>
+              <div className="absolute inset-0 bg-white/10 group-hover:bg-transparent transition-colors duration-500" />
+            </div>
+
+            <div className="bg-[#2B2644] rounded-2xl p-7 min-h-80 flex flex-col justify-between text-white">
+              <h3 className="text-2xl font-medium leading-tight">Always fluid,<br />always optimized.</h3>
+              <p className="text-white/60 text-base">
+                Maintain full control of your stack with on-demand audit refreshes — no waiting for monthly bills.
+              </p>
+            </div>
+
+            <div className="bg-[#2B2644] rounded-2xl p-7 min-h-80 flex flex-col justify-between text-white">
+              <h3 className="text-2xl font-medium leading-tight">Fully<br />Automated.</h3>
+              <p className="text-white/60 text-base">
+                Skip the task of auditing seats yourself. CredMaster runs in the background and alerts you to waste.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ═══ HOW IT WORKS ═══ */}
-      <section className="max-w-4xl mx-auto px-6 py-20">
-        <h2 className="text-2xl font-bold text-center mb-12 text-white">
-          How It Works
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            {
-              step: "1",
-              title: "Enter your tools",
-              desc: "Tell us what AI tools your team uses and how much you pay.",
-              icon: "📝",
-            },
-            {
-              step: "2",
-              title: "Get your audit instantly",
-              desc: "Our engine checks for seat waste, plan mismatches, and overlaps.",
-              icon: "⚡",
-            },
-            {
-              step: "3",
-              title: "Share your savings report",
-              desc: "Get a shareable link with actionable recommendations.",
-              icon: "📊",
-            },
-          ].map((item) => (
-            <div
-              key={item.step}
-              className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 text-center hover:border-slate-700 transition-colors"
-            >
-              <div className="text-4xl mb-4">{item.icon}</div>
-              <div className="text-indigo-400 font-bold text-sm mb-2">
-                STEP {item.step}
-              </div>
-              <h3 className="text-lg font-semibold text-white mb-2">
-                {item.title}
-              </h3>
-              <p className="text-slate-400 text-sm leading-relaxed">
-                {item.desc}
-              </p>
+      {/* 3. Backed By Section */}
+      <section className="bg-[#F5F5F5] px-6 py-12 border-y border-gray-200">
+        <div className="max-w-[88rem] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 items-center">
+          <div className="text-black/70 text-base leading-relaxed">
+            Auditing spend for premier<br />partners and forward-thinking teams.
+          </div>
+          <div className="md:col-span-3 overflow-hidden">
+            <div className="backers-track">
+              {[...Array(2)].map((_, i) => (
+                <React.Fragment key={i}>
+                  <span className="mx-10 text-black/40 font-normal" style={{ fontFamily: "serif", fontSize: "14px" }}>Fundamental Labs</span>
+                  <span className="mx-10 text-black/40 font-black uppercase" style={{ fontFamily: "sans-serif", fontSize: "16px" }}>KUCOIN</span>
+                  <span className="mx-10 text-black/40 font-bold" style={{ fontFamily: "Impact, sans-serif", fontSize: "18px" }}>NGC</span>
+                  <span className="mx-10 text-black/40 font-semibold" style={{ fontFamily: "Georgia, serif", fontSize: "17px" }}>NxGen</span>
+                  <span className="mx-10 text-black/40 font-bold" style={{ fontFamily: "Helvetica, sans-serif", fontSize: "15px" }}>Matter Labs</span>
+                  <span className="mx-10 text-black/40 font-bold uppercase" style={{ fontFamily: "Verdana, sans-serif", fontSize: "14px" }}>DEXTools</span>
+                  <span className="mx-10 text-black/40 font-bold" style={{ fontFamily: "'Courier New', monospace", fontSize: "14px", letterSpacing: "0.18em" }}>NGRAVE</span>
+                  <span className="mx-10 text-black/40 font-medium" style={{ fontFamily: "Palatino, serif", fontSize: "15px" }}>Polychain</span>
+                </React.Fragment>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </section>
 
-      {/* ═══ THE FORM ═══ */}
-      <section className="max-w-5xl mx-auto px-6 pb-24">
-        <SpendForm />
+      {/* 4. Use Cases Section */}
+      <section className="bg-[#F5F5F5] px-6 py-24">
+        <div className="max-w-[88rem] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+          <div className="md:pr-12 md:pt-2">
+            <span className="text-black/60 text-sm mb-2 block font-medium uppercase tracking-widest">CredMaster in Practice</span>
+            <h2 className="text-5xl md:text-7xl font-medium leading-none mb-6" style={{ letterSpacing: "-0.04em" }}>Audit<br />Modes.</h2>
+            <p className="text-black/60 text-base md:text-lg leading-relaxed max-w-sm">
+              CredMaster powers deep audits for builders, scale-ups and enterprises wanting lean toolstacks and zero waste.
+            </p>
+          </div>
+          <div className="relative rounded-3xl overflow-hidden min-h-[720px] shadow-2xl">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+            >
+              <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260423_183428_ab5e672a-f608-4dcb-b319-f3e040f02e2d.mp4" type="video/mp4" />
+            </video>
+            <div className="relative z-10 p-10 md:p-16 flex flex-col justify-end h-full bg-gradient-to-t from-black/40 to-transparent text-white">
+              <h3 className="text-4xl md:text-6xl font-medium leading-tight mb-5" style={{ letterSpacing: "-0.03em" }}>Intelligence</h3>
+              <p className="text-white/80 text-lg md:text-xl max-w-md mb-8 leading-relaxed">
+                Lift team productivity by consolidating onto the best-in-class AI models while letting CredMaster manage the overhead.
+              </p>
+              <button 
+                onClick={() => setIsFormOpen(true)}
+                className="inline-flex items-center gap-4 group"
+              >
+                <div className="w-12 h-12 rounded-full bg-white/90 backdrop-blur flex items-center justify-center group-hover:bg-white transition-all transform group-hover:scale-110">
+                  <ArrowRight className="w-6 h-6 text-black" />
+                </div>
+                <span className="text-xl font-medium text-white group-hover:underline underline-offset-8">Run Audit Now</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* ═══ FOOTER ═══ */}
-      <footer className="border-t border-slate-800/40 py-10">
-        <div className="max-w-5xl mx-auto px-6 text-center">
-          <p className="text-slate-500 text-sm">
-            Built for engineering teams paying too much for AI.
-          </p>
-          <p className="text-slate-600 text-xs mt-2">© 2025 CredMaster</p>
+      {/* Footer */}
+      <footer className="bg-[#F5F5F5] border-t border-gray-200 py-16 px-6">
+        <div className="max-w-[88rem] mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-2">
+              <LogoIcon className="w-7 h-7 text-black" />
+              <span className="text-2xl font-medium tracking-tight text-black">CredMaster</span>
+            </div>
+            <p className="text-gray-500 text-sm max-w-xs">
+              Building the future of enterprise AI spend intelligence. Built for lean engineering teams.
+            </p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-16">
+            <div className="flex flex-col gap-4">
+              <span className="text-black font-semibold text-sm uppercase tracking-wider">Product</span>
+              <a href="#" className="text-gray-500 hover:text-black transition-colors text-sm">Audit Engine</a>
+              <a href="#" className="text-gray-500 hover:text-black transition-colors text-sm">Integrations</a>
+              <a href="#" className="text-gray-500 hover:text-black transition-colors text-sm">Enterprise</a>
+            </div>
+            <div className="flex flex-col gap-4">
+              <span className="text-black font-semibold text-sm uppercase tracking-wider">Company</span>
+              <a href="#" className="text-gray-500 hover:text-black transition-colors text-sm">About</a>
+              <a href="#" className="text-gray-500 hover:text-black transition-colors text-sm">Blog</a>
+              <a href="#" className="text-gray-500 hover:text-black transition-colors text-sm">Privacy</a>
+            </div>
+          </div>
+        </div>
+        <div className="max-w-[88rem] mx-auto mt-16 pt-8 border-t border-gray-100 flex justify-between items-center text-xs text-gray-400">
+          <span>© 2025 CredMaster AI. All rights reserved.</span>
+          <div className="flex gap-6">
+            <a href="#" className="hover:text-black">Twitter</a>
+            <a href="#" className="hover:text-black">LinkedIn</a>
+          </div>
         </div>
       </footer>
+
+      {/* Audit Form Modal */}
+      {isFormOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsFormOpen(false)} />
+          <div className="relative bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl p-6 md:p-12 animate-in fade-in zoom-in duration-300">
+            <button 
+              onClick={() => setIsFormOpen(false)}
+              className="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-colors"
+            >
+              <X className="w-6 h-6 text-gray-500" />
+            </button>
+            <div className="max-w-2xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-medium text-black mb-2 text-center" style={{ letterSpacing: "-0.03em" }}>Run Your AI Audit</h2>
+              <p className="text-gray-500 text-center mb-10">Enter your tool stack details below to find waste.</p>
+              <SpendForm />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
