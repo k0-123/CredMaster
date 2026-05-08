@@ -18,6 +18,7 @@
     "@testing-library/react": "^16.3.2",
     "@vercel/og": "^0.11.1",
     "jsdom": "^29.1.1",
+    "lucide-react": "^1.14.0",
     "nanoid": "^5.1.11",
     "next": "16.2.5",
     "react": "19.2.4",
