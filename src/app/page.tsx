@@ -197,10 +197,16 @@ export default function LandingPage() {
       {/* 4. Use Cases Section */}
       <section className="bg-[#F5F5F5] px-6 py-24">
         <div className="max-w-[88rem] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-          <div className="md:pr-12 md:pt-2">
-            <span className="text-black/60 text-sm mb-2 block font-medium uppercase tracking-widest">CredMaster in Practice</span>
-            <h2 className="text-5xl md:text-7xl font-medium leading-none mb-6" style={{ letterSpacing: "-0.04em" }}>Audit<br />Modes.</h2>
-            <p className="text-black/60 text-base md:text-lg leading-relaxed max-w-sm">
+          <div className="flex flex-col">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-8 h-[2px] bg-emerald-500 rounded-full" />
+              <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-gray-400">CredMaster in Practice</span>
+            </div>
+            <h2 className="text-6xl md:text-8xl font-semibold tracking-tighter text-black leading-[0.85] mb-8" style={{ letterSpacing: "-0.04em" }}>
+              Audit <br />
+              <span className="text-gray-300 italic">Modes.</span>
+            </h2>
+            <p className="text-xl text-gray-500 leading-relaxed max-w-sm font-medium">
               CredMaster powers deep audits for builders, scale-ups and enterprises wanting lean toolstacks and zero waste.
             </p>
           </div>
