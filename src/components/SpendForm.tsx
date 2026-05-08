@@ -38,6 +38,7 @@ export default function SpendForm() {
   const [selectedTools, setSelectedTools] = useState<ToolName[]>(
     formData.tools.map((t) => t.tool)
   );
+  const [hpValue, setHpValue] = useState("");
 
   // ── Step navigation ──
 
@@ -84,7 +85,7 @@ export default function SpendForm() {
       const res = await fetch("/api/audit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, website: "" }), // honeypot empty
+        body: JSON.stringify({ ...formData, website: hpValue }),
       });
       if (!res.ok) {
         const d = await res.json();
@@ -339,6 +340,8 @@ export default function SpendForm() {
                 tabIndex={-1}
                 aria-hidden="true"
                 autoComplete="off"
+                value={hpValue}
+                onChange={(e) => setHpValue(e.target.value)}
               />
 
               <div className="flex gap-3">

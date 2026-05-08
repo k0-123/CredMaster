@@ -29,5 +29,35 @@
 - Wire Supabase for persistent audit + lead storage
 - Connect Resend for transactional emails
 - Deploy to Vercel and get live URL
-- Add actual Anthropic API call to /api/summary route
+- Add actual Anthropic API call to /api/summary route (Swapped to Gemini per request)
 - Add dynamic og:image using @vercel/og
+
+## Day 2 — 2025-01-16
+**Hours worked:** 8
+
+**What I did:**
+- Replaced in-memory audit storage with Supabase (audits + leads tables with RLS policies)
+- Built full leads API route with email validation, rate limiting, and honeypot protection
+- Wired Resend for transactional emails — sends HTML email with audit summary + CTA to view report
+- Connected Gemini API to /api/summary route with graceful fallback to templated summary if API fails
+- Added @vercel/og dynamic OG image generation at /api/og — each audit URL now generates a unique 1200x630 preview card
+- Updated audit results page to use dynamic og:image URL
+- Added ErrorBoundary and LoadingSkeleton components
+- Created DEPLOYMENT.md with setup checklist
+- Added 3 more unit tests (total: 11)
+- Deployed to Vercel — live and verified
+
+**What I learned:**
+- Supabase RLS (Row Level Security) requires explicit policies even for service role inserts when RLS is enabled — missing this caused silent insert failures that looked like success from the client.
+- @vercel/og requires edge runtime — you cannot use Node.js APIs in the same file.
+- Resend's free tier requires domain verification for custom from addresses; using onboarding@resend.dev works immediately for testing.
+- Swapping LLM providers (Anthropic to Gemini) is trivial when the prompt engineering and fallback logic are decoupled from the SDK calls.
+
+**Blockers / what I'm stuck on:**
+- Waiting for DNS propagation on custom domain for Resend verification. Using sandbox for now.
+
+**Plan for tomorrow:**
+- Polish UI — visual quality on results page matters for sharing.
+- Add PDF export (bonus feature).
+- Start user interviews (need 3 by Day 5).
+- Write GTM.md first draft.

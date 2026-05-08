@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { AuditInput, AuditResult } from "@/lib/types";
 import { runAudit } from "@/lib/auditEngine";
+import { supabaseAdmin, isSupabaseConfigured } from "@/lib/supabase";
 
-// ── In-memory stores ──
+// ── In-memory stores (Fallback if Supabase is not configured) ──
 export const auditStore = new Map<string, AuditResult>();
 export const rateLimitMap = new Map<string, number[]>();
 
@@ -64,28 +65,55 @@ export async function POST(req: NextRequest) {
     const auditData = runAudit(input);
     const id = crypto.randomUUID();
 
-    const result: AuditResult = {
-      id,
-      ...auditData,
-      aiSummary: null,
-      createdAt: new Date().toISOString(),
-    };
+    if (isSupabaseConfigured) {
+      const { data, error } = await supabaseAdmin
+        .from("audits")
+        .insert({
+          id,
+          input: JSON.stringify(input),
+          tool_results: JSON.stringify(auditData.toolResults),
+          total_monthly_savings: auditData.totalMonthlySavings,
+          total_annual_savings: auditData.totalAnnualSavings,
+          ai_summary: null,
+        })
+        .select("id")
+        .single();
 
-    auditStore.set(id, result);
-
-    return NextResponse.json(
-      {
-        id: result.id,
-        totalMonthlySavings: result.totalMonthlySavings,
-        totalAnnualSavings: result.totalAnnualSavings,
-      },
-      { status: 200 }
-    );
-  } catch {
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+      if (error) {
+        console.error("Supabase insert error:", error);
+        return NextResponse.json({ error: "Failed to save audit" }, { status: 500 });
+      }
+      
+      return NextResponse.json(
+        {
+          id: data.id,
+          totalMonthlySavings: auditData.totalMonthlySavings,
+          totalAnnualSavings: auditData.totalAnnualSavings,
+        },
+        { status: 200 }
+      );
+    } else {
+      // Fallback to in-memory
+      const result: AuditResult = {
+        id,
+        ...auditData,
+        aiSummary: null,
+        createdAt: new Date().toISOString(),
+      };
+      auditStore.set(id, result);
+      
+      return NextResponse.json(
+        {
+          id: result.id,
+          totalMonthlySavings: result.totalMonthlySavings,
+          totalAnnualSavings: result.totalAnnualSavings,
+        },
+        { status: 200 }
+      );
+    }
+  } catch (error) {
+    console.error("Audit API Error:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
 
@@ -97,10 +125,31 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Query param 'id' is required." }, { status: 400 });
   }
 
-  const audit = auditStore.get(id);
-  if (!audit) {
-    return NextResponse.json({ error: "Audit not found" }, { status: 404 });
-  }
+  if (isSupabaseConfigured) {
+    const { data, error } = await supabaseAdmin
+      .from("audits")
+      .select("*")
+      .eq("id", id)
+      .single();
 
-  return NextResponse.json(audit, { status: 200 });
+    if (error || !data) {
+      return NextResponse.json({ error: "Audit not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({
+      id: data.id,
+      input: JSON.parse(data.input),
+      toolResults: JSON.parse(data.tool_results),
+      totalMonthlySavings: Number(data.total_monthly_savings),
+      totalAnnualSavings: Number(data.total_annual_savings),
+      aiSummary: data.ai_summary,
+      createdAt: data.created_at,
+    });
+  } else {
+    const audit = auditStore.get(id);
+    if (!audit) {
+      return NextResponse.json({ error: "Audit not found" }, { status: 404 });
+    }
+    return NextResponse.json(audit, { status: 200 });
+  }
 }

@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.95.1",
+    "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^5.2.2",
     "@supabase/supabase-js": "^2.105.3",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.2",
+    "@vercel/og": "^0.11.1",
     "jsdom": "^29.1.1",
     "nanoid": "^5.1.11",
     "next": "16.2.5",
