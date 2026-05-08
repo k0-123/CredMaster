@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { runAudit, generateFallbackSummary, isValidEmail } from "./auditEngine";
-import type { AuditInput, AuditResult } from "./types";
+import type { AuditInput } from "./types";
 
 describe("Audit Engine & Utilities", () => {
   // ── Existing Tests 1-8 ──
@@ -100,10 +100,12 @@ describe("Audit Engine & Utilities", () => {
   // ── Test 9 — Fallback summary generates correctly ──
   it("Test 9: generateFallbackSummary contains tool name and savings", () => {
     const mockAudit = {
-      input: { teamSize: 10, tools: [{ tool: "cursor", monthlySpend: 200 }] },
+      input: { teamSize: 10, engineerCount: 5, primaryUseCase: "coding" as const, tools: [{ tool: "cursor" as const, plan: "pro", seats: 10, monthlySpend: 200 }] },
       toolResults: [{
-        tool: "cursor",
-        recommendation: { type: "reduce-seats", reason: "Too many seats" },
+        tool: "cursor" as const,
+        plan: "pro",
+        currentMonthlySpend: 200,
+        recommendation: { type: "reduce-seats" as const, reason: "Too many seats", savingsPerMonth: 100, suggestedSeats: 5 },
         savingsPerMonth: 100
       }],
       totalMonthlySavings: 100,

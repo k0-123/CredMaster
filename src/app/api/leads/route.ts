@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin, isSupabaseConfigured } from "@/lib/supabase";
 import { sendAuditEmail } from "@/lib/email";
+import { ToolAuditResult } from "@/lib/types";
 
 export const leadRateLimitMap = new Map<string, number[]>();
 const RATE_LIMIT_WINDOW = 3600_000; // 1 hour
@@ -43,7 +44,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Save to DB
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && supabaseAdmin) {
       const { error } = await supabaseAdmin.from("leads").insert({
         audit_id: auditId,
         email: email.toLowerCase().trim(),
@@ -61,7 +62,7 @@ export async function POST(req: NextRequest) {
 
     // Fetch audit data to populate email
     let auditData;
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && supabaseAdmin) {
       const { data } = await supabaseAdmin
         .from("audits")
         .select("*")
@@ -69,15 +70,15 @@ export async function POST(req: NextRequest) {
         .single();
       
       if (data) {
-        const parsedResults = JSON.parse(data.tool_results);
-        const topRec = parsedResults
-          .filter((r: any) => r.recommendation.type !== "optimal")
-          .sort((a: any, b: any) => b.savingsPerMonth - a.savingsPerMonth)[0];
+        const parsedResults: ToolAuditResult[] = JSON.parse(data.tool_results);
+        const topRec = [...parsedResults]
+          .filter((r) => r.recommendation.type !== "optimal")
+          .sort((a, b) => b.savingsPerMonth - a.savingsPerMonth)[0];
 
         auditData = {
           totalMonthlySavings: Number(data.total_monthly_savings),
           totalAnnualSavings: Number(data.total_annual_savings),
-          teamSize: JSON.parse(data.input).teamSize,
+          teamSize: JSON.parse(data.input).teamSize as number,
           topRecommendation: topRec ? topRec.recommendation.reason : "All good!",
         };
       }

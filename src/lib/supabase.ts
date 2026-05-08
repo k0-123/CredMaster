@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
@@ -13,14 +13,14 @@ export const isSupabaseConfigured =
 
 // Browser client (uses ANON key, safe for client components)
 // We only instantiate if we have a valid URL to prevent build errors
-export const supabase = isSupabaseConfigured
+export const supabase: SupabaseClient | null = isSupabaseConfigured
   ? createClient(supabaseUrl, supabaseAnonKey)
-  : (null as any);
+  : null;
 
 // Server client (uses SERVICE ROLE key, only used in API routes)
-export const supabaseAdmin = isSupabaseConfigured && supabaseServiceRoleKey && supabaseServiceRoleKey !== "your_supabase_service_role_key"
+export const supabaseAdmin: SupabaseClient | null = isSupabaseConfigured && supabaseServiceRoleKey && supabaseServiceRoleKey !== "your_supabase_service_role_key"
   ? createClient(supabaseUrl, supabaseServiceRoleKey)
-  : (null as any);
+  : null;
 
 export type AuditRow = {
   id: string;

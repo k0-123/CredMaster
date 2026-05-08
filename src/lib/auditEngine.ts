@@ -180,7 +180,7 @@ export function runAudit(
       recommendation = {
         type: "optimal",
         reason: "Spend looks right-sized for your team and use case.",
-        savingsPerMonth: 0 as 0,
+        savingsPerMonth: 0,
       };
     }
 
@@ -213,12 +213,14 @@ export function runAudit(
 /**
  * Generates a fallback CFO-style summary if the AI API fails.
  */
-export function generateFallbackSummary(audit: any): string {
-  const topRec = audit.toolResults
-    .filter((r: any) => r.recommendation.type !== 'optimal')
-    .sort((a: any, b: any) => b.savingsPerMonth - a.savingsPerMonth)[0];
+export function generateFallbackSummary(audit: Partial<AuditResult> & { input: AuditInput }): string {
+  if (!audit.toolResults || !audit.input) return "Summary unavailable.";
+
+  const topRec = [...audit.toolResults]
+    .filter((r) => r.recommendation.type !== 'optimal')
+    .sort((a, b) => b.savingsPerMonth - a.savingsPerMonth)[0];
   
-  const totalMonthlySpend = audit.input.tools.reduce((s: number, t: any) => s + t.monthlySpend, 0);
+  const totalMonthlySpend = audit.input.tools.reduce((s, t) => s + t.monthlySpend, 0);
 
   if (audit.totalMonthlySavings === 0) {
     return `Your team's AI tool spend appears well-optimized. Across ${audit.toolResults.length} tools reviewed, all plans are appropriately sized for your team of ${audit.input.teamSize}. Continue monitoring as your team grows — plan tiers that fit today may become inefficient as headcount changes.`;
