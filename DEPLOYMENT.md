@@ -10,7 +10,7 @@
    - SUPABASE_SERVICE_ROLE_KEY = (from Supabase project settings)
    - GEMINI_API_KEY = (from Google AI Studio)
    - RESEND_API_KEY = (from resend.com dashboard)
-   - RESEND_FROM_EMAIL = audits@yourdomain.com
+   - RESEND_FROM_EMAIL = (your verified email)
 4. Click Deploy
 
 ## Supabase Setup Steps
