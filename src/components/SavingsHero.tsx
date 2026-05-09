@@ -1,4 +1,5 @@
 import React from "react";
+import { trackEvent } from "@/lib/analytics";
 
 export default function SavingsHero({
   savings,
@@ -57,6 +58,10 @@ export default function SavingsHero({
                     href="https://credex.ai"
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => trackEvent('credex_cta_clicked', {
+                      monthlySavings: savings,
+                      annualSavings: annualSavings,
+                    })}
                     className="text-black font-bold border-b-2 border-black/20 hover:border-black transition-all ml-1"
                   >
                     Get the CredMaster Playbook →

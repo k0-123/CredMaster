@@ -10,6 +10,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AuditResultsSkeleton } from "@/components/LoadingSkeleton";
 import { LogoIcon } from "@/components/LogoIcon";
 import { Footer } from "@/components/Footer";
+import { trackEvent } from "@/lib/analytics";
 
 interface AuditClientProps {
   id: string;
@@ -38,6 +39,17 @@ export default function AuditClient({ id }: AuditClientProps) {
         }
         const data = await res.json();
         setAudit(data);
+        
+        trackEvent("audit_viewed", {
+          auditId: id,
+          totalMonthlySavings: data.totalMonthlySavings,
+          totalAnnualSavings: data.totalAnnualSavings,
+          toolCount: data.toolResults.length,
+          teamSize: data.input.teamSize,
+          isOptimal: data.totalMonthlySavings === 0,
+          isHighSavings: data.totalMonthlySavings > 500,
+        });
+
         setLoading(false);
       } catch {
         setNotFound(true);
@@ -62,6 +74,7 @@ export default function AuditClient({ id }: AuditClientProps) {
         if (res.ok) {
           const data = await res.json();
           setFetchedAiSummary(data.summary);
+          trackEvent("summary_generated", { auditId: id });
         } else {
           throw new Error("API failed");
         }
@@ -75,6 +88,7 @@ export default function AuditClient({ id }: AuditClientProps) {
         setFetchedAiSummary(
           `Your team of ${audit.input.teamSize} is currently spending $${totalSpend}/month across ${audit.input.tools.length} AI tools. Our analysis found $${audit.totalMonthlySavings}/month ($${audit.totalAnnualSavings}/year) in potential savings. The largest opportunity is ${topRec?.tool ?? 'tool optimization'}: ${topDesc}. Addressing this requires no workflow changes — only a plan adjustment.`
         );
+        trackEvent("summary_fallback_used", { auditId: id });
       } finally {
         setSummaryLoading(false);
       }
@@ -174,7 +188,11 @@ export default function AuditClient({ id }: AuditClientProps) {
                   We&apos;ll email you the step-by-step consolidation plan and notify you when new savings apply.
                 </p>
                 <div className="relative z-10">
-                  <LeadCaptureModal auditId={id} />
+                  <LeadCaptureModal 
+                    auditId={id} 
+                    totalMonthlySavings={audit.totalMonthlySavings}
+                    totalAnnualSavings={audit.totalAnnualSavings}
+                  />
                 </div>
               </section>
             </div>

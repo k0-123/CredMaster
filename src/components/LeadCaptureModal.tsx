@@ -1,17 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { trackEvent } from "@/lib/analytics";
 
 interface Props {
   auditId: string;
+  totalMonthlySavings: number;
+  totalAnnualSavings: number;
 }
 
-export default function LeadCaptureModal({ auditId }: Props) {
+export default function LeadCaptureModal({ 
+  auditId, 
+  totalMonthlySavings,
+  totalAnnualSavings 
+}: Props) {
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
   const [role, setRole] = useState("");
   const [website, setWebsite] = useState(""); // Honeypot
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  useEffect(() => {
+    trackEvent('lead_form_opened', {
+      auditId,
+      totalMonthlySavings,
+    });
+  }, [auditId, totalMonthlySavings]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +45,12 @@ export default function LeadCaptureModal({ auditId }: Props) {
         }),
       });
       if (res.ok) {
+        trackEvent('lead_captured', {
+          auditId,
+          totalMonthlySavings,
+          totalAnnualSavings,
+          isHighSavings: totalMonthlySavings > 500,
+        });
         setStatus("success");
       } else {
         setStatus("error");

@@ -6,6 +6,8 @@ import { useFormPersistence } from "@/hooks/useFormPersistence";
 import type { AuditInput, ToolName, ToolEntry } from "@/lib/types";
 import { PRICING_DATA } from "@/lib/pricingData";
 import { ArrowRight, ChevronLeft, Check } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
+import { useEffect } from "react";
 
 const ALL_TOOLS: { id: ToolName; name: string; color: string; initials: string }[] = [
   { id: "cursor", name: "Cursor", color: "bg-blue-600", initials: "CU" },
@@ -41,9 +43,25 @@ export default function SpendForm() {
   );
   const [hpValue, setHpValue] = useState("");
 
-  const goToStep2 = () => setStep(2);
+  useEffect(() => {
+    trackEvent("audit_form_started");
+  }, []);
+
+  const goToStep2 = () => {
+    trackEvent("audit_form_step_completed", {
+      step: 1,
+      teamSize: formData.teamSize,
+      engineerCount: formData.engineerCount,
+      primaryUseCase: formData.primaryUseCase,
+    });
+    setStep(2);
+  };
 
   const goToStep3 = () => {
+    trackEvent("audit_form_step_completed", {
+      step: 2,
+      toolCount: selectedTools.length,
+    });
     const newTools: ToolEntry[] = selectedTools.map((toolId) => {
       const existing = formData.tools.find((t) => t.tool === toolId);
       if (existing) return existing;
@@ -90,6 +108,17 @@ export default function SpendForm() {
         throw new Error(d.error ?? "Audit failed");
       }
       const data = await res.json();
+      
+      trackEvent("audit_submitted", {
+        toolCount: formData.tools.length,
+        teamSize: formData.teamSize,
+        engineerCount: formData.engineerCount,
+        primaryUseCase: formData.primaryUseCase,
+        totalDeclaredSpend: formData.tools.reduce(
+          (sum, t) => sum + t.monthlySpend, 0
+        ),
+      });
+
       router.push(`/audit/${data.id}`);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong");

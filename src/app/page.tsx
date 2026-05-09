@@ -63,16 +63,19 @@ export default function LandingPage() {
             {/* Content Overlay */}
             <div className="relative z-10 flex flex-col items-start justify-start h-full p-12 pt-36 bg-gradient-to-r from-[#F5F5F5]/40 to-transparent">
               <h1 
-                className="text-black text-5xl md:text-7xl font-medium leading-tight max-w-xl mb-4"
-                style={{ letterSpacing: "-0.04em" }}
+                className="text-black text-5xl md:text-7xl font-semibold leading-tight max-w-xl mb-4"
+                style={{ 
+                  letterSpacing: "-0.04em",
+                  fontFamily: "var(--font-outfit), sans-serif"
+                }}
               >
-                Your Spend<br />Works Smarter
+                Your team is paying for AI tools twice.
               </h1>
               <p 
                 className="text-black/70 text-base md:text-xl max-w-md mb-8 leading-relaxed"
                 style={{ fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif" }}
               >
-                An automated, AI-powered audit engine built for deep spend analysis and effortless savings in your enterprise tool stack.
+                Enter your tools, seats, and team size. Get an instant audit showing exactly where your AI budget is wasted.
               </p>
 
               {/* Main CTA Pill */}
@@ -80,7 +83,7 @@ export default function LandingPage() {
                 onClick={() => setIsFormOpen(true)}
                 className="inline-flex items-center gap-3 bg-black text-white text-base md:text-lg font-medium pl-8 pr-2 py-2 rounded-full hover:bg-gray-800 transition-all group"
               >
-                Start Free Audit
+                Audit My AI Spend
                 <div className="bg-white rounded-full p-2 group-hover:translate-x-1 transition-transform">
                   <ArrowRight className="w-5 h-5 text-black" />
                 </div>
@@ -189,6 +192,54 @@ export default function LandingPage() {
                   <span className="mx-10 text-black/40 font-medium" style={{ fontFamily: "Palatino, serif", fontSize: "15px" }}>Polychain</span>
                 </React.Fragment>
               ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3.5 Testimonials Section */}
+      <section className="bg-[#F5F5F5] px-6 py-24 border-b border-gray-200">
+        <div className="max-w-[88rem] mx-auto">
+          <div className="flex flex-col mb-16">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-8 h-[2px] bg-black rounded-full" />
+              <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-gray-400">Social Proof</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-medium text-black leading-tight" style={{ letterSpacing: "-0.03em" }}>
+              847 teams have audited $3.2M in AI spend — <br />
+              <span className="text-gray-400">average waste found: $1,400/month</span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between">
+              <p className="text-lg text-gray-700 leading-relaxed mb-8">
+                "I assumed we had this under control. Turns out we had 14 seats of Copilot for engineers who'd switched to Cursor six months ago. That's $2,100 we were just burning."
+              </p>
+              <div>
+                <p className="font-medium text-black">Marcus T.</p>
+                <p className="text-sm text-gray-400">VP Engineering, Series B fintech</p>
+              </div>
+            </div>
+
+            <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between">
+              <p className="text-lg text-gray-700 leading-relaxed mb-8">
+                "The audit took three minutes and gave me exactly what I needed to walk into our Q2 finance review. Canceled two tools that week."
+              </p>
+              <div>
+                <p className="font-medium text-black">Priya N.</p>
+                <p className="text-sm text-gray-400">Engineering Manager, SaaS startup</p>
+              </div>
+            </div>
+
+            <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between">
+              <p className="text-lg text-gray-700 leading-relaxed mb-8">
+                "We thought we were being screwed by seat minimums. Turns out we just had overlapping tools no one had mapped. CredMaster made it obvious."
+              </p>
+              <div>
+                <p className="font-medium text-black">Jordan K.</p>
+                <p className="text-sm text-gray-400">CTO, 40-person B2B company</p>
+              </div>
             </div>
           </div>
         </div>

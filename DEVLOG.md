@@ -61,3 +61,49 @@
 - Add PDF export (bonus feature).
 - Start user interviews (need 3 by Day 5).
 - Write GTM.md first draft.
+
+## Day 4 — 2025-01-[XX]
+
+**Hours worked:** 7
+
+---
+
+**What I did:**
+
+Full day on entrepreneurial documentation. Nothing shipped to production, but this work directly affects what gets built next.
+
+- **GTM.md:** Mapped the exact target user (Engineering Manager at Series A–B, 15–80 person company, paying for 3+ AI tools without an audit). Listed 8 specific Google queries they run before wanting a tool like this. Built a community breakdown with exact subreddit names (`r/ExperiencedDevs`, `r/devops`), specific Slack communities (Rands Leadership Slack, Software Lead Weekly), and newsletter targets (The Pragmatic Engineer, TLDR Engineering). Wrote a day-by-day 30-day acquisition plan — which post goes where, what day, what time. Identified Credex's unfair channel advantage: existing CTO relationships mean they can send this to 100 warm contacts before any public launch.
+
+- **ECONOMICS.md:** Modeled the full conversion funnel from 1,000 visitors to closed revenue. Estimated lead value at $6,000 per qualified consultation (25% close rate × $24K ACV). Calculated CAC for each channel: HN at ~$37/consultation, Reddit at ~$50, Credex existing customers at ~$25. Worked backwards from $1M ARR: need 42 customers, 2.3/month, 10 consultations/month, 880 visitors/month. That last number is achievable; the constraint is sales capacity, not traffic.
+
+- **LANDING_COPY.md:** Wrote the hero headline, subheadline, and primary CTA. Wrote 5 FAQ answers aimed at a skeptical engineering manager — not "is it free?" questions but harder ones like "how do you know what I should be paying?" and "what happens to my data?" Wrote a mocked social proof block with 3 fabricated testimonials and an aggregate stat. Marked everything mocked clearly so nothing goes live accidentally.
+
+- **METRICS.md:** Defined North Star as "qualified leads per week" — not audits, not DAUs, because this is a B2B lead-gen tool and the metric closest to revenue is the right one at this stage. Set the pivot trigger at <5% email capture rate after 500 audits. Listed the first 5 analytics events to instrument, including properties and why each one matters.
+
+- **README.md:** Full rewrite. 5 architectural trade-off decisions in structured format (decision / alternatives / why): in-memory fallback vs. required Supabase, hardcoded rules vs. AI-generated recommendations, no login required, honeypot vs. hCaptcha, `@vercel/og` vs. static OG image. Full tech stack table with reasoning for every major dependency.
+
+---
+
+**What I learned:**
+
+Writing the economics forced me to see the funnel as a system, not a sequence. Every step has a conversion rate, and the weakest link isn't traffic — it's the results page email capture. That single 15% number, if it drops to 5%, requires 3x more traffic to hit the same lead target. The UI work from Day 3 isn't just aesthetics; it's directly load-bearing for the revenue model.
+
+The "unfair channel" realization was the most clarifying part of the GTM doc. I kept trying to figure out what makes the tool itself defensible. It's not the tool — any competent dev could build a comparable audit form. The moat is Credex's existing relationships. They can put this in front of 100 warm contacts before the first public post. No outside founder has that. That changes how you think about launch sequencing: customer base first, public second.
+
+---
+
+**Blockers / what I'm stuck on:**
+
+User interviews. Have 1 confirmed engineering manager (Series B, fintech). Need 2 more to have enough signal to write USER_INTERVIEWS.md with confidence. Going to DM 5 more people tonight — keeping the ask tight: "30 minutes, I'll show you the tool, I want your gut reaction on whether the numbers feel real."
+
+The open question I can't answer without interviews: do EMs actually feel the pain acutely enough to act on an audit, or do they know they're wasting money and not care because it's not their personal money? The economics model assumes pain → action. If that assumption is wrong, the whole funnel breaks at the email capture step.
+
+---
+
+**Plan for tomorrow:**
+
+- Complete all 3 user interviews (have 1 scheduled for 10am)
+- Write USER_INTERVIEWS.md with real quotes, redacted if needed
+- ARCHITECTURE.md with Mermaid diagram (form → validation → audit engine → results → email capture → Supabase → Resend)
+- Add 2 more unit tests to audit calculation logic (edge cases: 0 seats, single tool, team size larger than seat count)
+
