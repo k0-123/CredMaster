@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   let auditData = null;
 
-  if (isSupabaseConfigured) {
+  if (isSupabaseConfigured && supabaseAdmin) {
     const { data } = await supabaseAdmin
       .from("audits")
       .select("*")
