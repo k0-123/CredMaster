@@ -8,13 +8,14 @@ Built in one week as a job application project for [Credex](https://credex.ai), 
 
 ## Screenshots
 
-> 📸 *[Add screenshots here — audit form, results page, email capture modal]*
+> 📸 *<img width="2873" height="1507" alt="image" src="https://github.com/user-attachments/assets/d8477560-cbb6-47dc-a332-d7f2d2353315" />
+*
 
 ---
 
 ## Live Demo
 
-> 🔗 *[Vercel URL — add after deployment]*
+> 🔗 *[https://69ff226d0c0910d93dc78011--cred-master.netlify.app/]*
 
 ---
 
