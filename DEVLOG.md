@@ -50,7 +50,7 @@
 **What I learned:**
 - Supabase RLS (Row Level Security) requires explicit policies even for service role inserts when RLS is enabled — missing this caused silent insert failures that looked like success from the client.
 - @vercel/og requires edge runtime — you cannot use Node.js APIs in the same file.
-- Resend's free tier requires domain verification for custom from addresses; using onboarding@resend.dev works immediately for testing.
+- Resend's free tier requires domain verification for custom from addresses; using the sandbox email works immediately for testing.
 - Swapping LLM providers (Anthropic to Gemini) is trivial when the prompt engineering and fallback logic are decoupled from the SDK calls.
 
 **Blockers / what I'm stuck on:**

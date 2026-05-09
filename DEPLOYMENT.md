@@ -21,7 +21,7 @@
 
 ## Resend Setup Steps
 1. Create account at resend.com (free tier: 3000 emails/month)
-2. Add and verify your domain (or use onboarding@resend.dev for testing without a domain)
+2. Add and verify your domain (or use the Resend sandbox for testing)
 3. Create API key → copy to RESEND_API_KEY
 
 ## Post-Deploy Verification
