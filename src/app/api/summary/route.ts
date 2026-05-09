@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     // 1. Fetch audit data
     let audit: AuditResult | null = null;
 
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && supabaseAdmin) {
       const { data } = await supabaseAdmin
         .from("audits")
         .select("*")
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 3. Save summary back to DB
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && supabaseAdmin) {
       await supabaseAdmin
         .from("audits")
         .update({ ai_summary: summary })
