@@ -63,7 +63,7 @@ export default function LandingPage() {
             {/* Content Overlay */}
             <div className="relative z-10 flex flex-col items-start justify-start h-full p-12 pt-36 bg-gradient-to-r from-[#F5F5F5]/40 to-transparent">
               <h1 
-                className="text-black text-6xl md:text-[7rem] font-normal leading-[0.85] max-w-2xl mb-8"
+                className="text-black text-6xl md:text-[7rem] font-normal leading-[0.95] max-w-2xl mb-8"
                 style={{ 
                   letterSpacing: "-0.02em",
                   fontFamily: "var(--font-instrument-serif), serif"
