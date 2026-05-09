@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
     const auditData = runAudit(input);
     const id = crypto.randomUUID();
 
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && supabaseAdmin) {
       const { data, error } = await supabaseAdmin
         .from("audits")
         .insert({
@@ -125,7 +125,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Query param 'id' is required." }, { status: 400 });
   }
 
-  if (isSupabaseConfigured) {
+  if (isSupabaseConfigured && supabaseAdmin) {
     const { data, error } = await supabaseAdmin
       .from("audits")
       .select("*")
