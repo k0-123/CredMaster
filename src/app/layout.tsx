@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Outfit } from "next/font/google";
+import { Geist, Geist_Mono, Outfit, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,6 +14,12 @@ const geistMono = Geist_Mono({
 
 const outfit = Outfit({
   variable: "--font-outfit",
+  subsets: ["latin"],
+});
+
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  weight: "400",
   subsets: ["latin"],
 });
 
@@ -33,7 +39,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable} h-full antialiased dark`}
+      className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable} ${instrumentSerif.variable} h-full antialiased dark`}
     >
       <body className="min-h-full flex flex-col bg-slate-950 text-white">
         <PageViewTracker />

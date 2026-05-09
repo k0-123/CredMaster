@@ -63,10 +63,10 @@ export default function LandingPage() {
             {/* Content Overlay */}
             <div className="relative z-10 flex flex-col items-start justify-start h-full p-12 pt-36 bg-gradient-to-r from-[#F5F5F5]/40 to-transparent">
               <h1 
-                className="text-black text-5xl md:text-8xl font-semibold leading-[0.9] max-w-xl mb-6"
+                className="text-black text-6xl md:text-[7rem] font-normal leading-[0.85] max-w-2xl mb-8"
                 style={{ 
-                  letterSpacing: "-0.05em",
-                  fontFamily: "var(--font-outfit), sans-serif"
+                  letterSpacing: "-0.02em",
+                  fontFamily: "var(--font-instrument-serif), serif"
                 }}
               >
                 Your Spend<br />
@@ -96,9 +96,12 @@ export default function LandingPage() {
                 <div className="marquee-track">
                   {[...Array(2)].map((_, i) => (
                     <React.Fragment key={i}>
-                      <span className="mx-10 text-black/40 font-bold text-lg" style={{ fontFamily: "var(--font-outfit), sans-serif", letterSpacing: "-0.03em" }}>Stripe</span>
-                      <span className="mx-10 text-black/40 font-bold text-lg" style={{ fontFamily: "var(--font-outfit), sans-serif", letterSpacing: "-0.03em" }}>Coinbase</span>
-                      <span className="mx-10 text-black/40 font-bold text-lg" style={{ fontFamily: "var(--font-outfit), sans-serif", letterSpacing: "-0.03em" }}>Uniswap</span>
+                      <span className="mx-10 text-black/40 font-black text-xs tracking-[0.2em]" style={{ fontFamily: "var(--font-geist-sans), sans-serif" }}>COINBASE</span>
+                      <span className="mx-10 text-black/40 font-medium text-lg italic" style={{ fontFamily: "var(--font-instrument-serif), serif" }}>Uniswap</span>
+                      <span className="mx-10 text-black/40 font-bold text-sm tracking-widest" style={{ fontFamily: "serif" }}>AAVE</span>
+                      <span className="mx-10 text-black/40 font-medium text-lg" style={{ fontFamily: "var(--font-instrument-serif), serif" }}>Compound</span>
+                      <span className="mx-10 text-black/40 font-bold text-sm" style={{ fontFamily: "var(--font-geist-sans), sans-serif" }}>MakerDAO</span>
+                      <span className="mx-10 text-black/40 font-bold text-sm" style={{ fontFamily: "var(--font-geist-sans), sans-serif" }}>Chainlink</span>
                     </React.Fragment>
                   ))}
                 </div>
