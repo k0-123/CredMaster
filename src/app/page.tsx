@@ -63,27 +63,29 @@ export default function LandingPage() {
             {/* Content Overlay */}
             <div className="relative z-10 flex flex-col items-start justify-start h-full p-12 pt-36 bg-gradient-to-r from-[#F5F5F5]/40 to-transparent">
               <h1 
-                className="text-black text-5xl md:text-7xl font-semibold leading-tight max-w-xl mb-4"
+                className="text-black text-5xl md:text-8xl font-semibold leading-[0.9] max-w-xl mb-6"
                 style={{ 
-                  letterSpacing: "-0.04em",
+                  letterSpacing: "-0.05em",
                   fontFamily: "var(--font-outfit), sans-serif"
                 }}
               >
-                Your team is paying for AI tools twice.
+                Your Spend<br />
+                Works Smarter
               </h1>
               <p 
-                className="text-black/70 text-base md:text-xl max-w-md mb-8 leading-relaxed"
-                style={{ fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif" }}
+                className="text-black/70 text-lg md:text-xl max-w-lg mb-10 leading-relaxed font-medium"
+                style={{ fontFamily: "var(--font-outfit), sans-serif" }}
               >
-                Enter your tools, seats, and team size. Get an instant audit showing exactly where your AI budget is wasted.
+                An automated, AI-powered audit engine built for deep spend analysis and effortless savings in your enterprise tool stack.
               </p>
 
               {/* Main CTA Pill */}
               <button 
                 onClick={() => setIsFormOpen(true)}
                 className="inline-flex items-center gap-3 bg-black text-white text-base md:text-lg font-medium pl-8 pr-2 py-2 rounded-full hover:bg-gray-800 transition-all group"
+                style={{ fontFamily: "var(--font-outfit), sans-serif" }}
               >
-                Audit My AI Spend
+                Start Free Audit
                 <div className="bg-white rounded-full p-2 group-hover:translate-x-1 transition-transform">
                   <ArrowRight className="w-5 h-5 text-black" />
                 </div>
@@ -94,13 +96,9 @@ export default function LandingPage() {
                 <div className="marquee-track">
                   {[...Array(2)].map((_, i) => (
                     <React.Fragment key={i}>
-                      <span className="mx-7 text-black/60 font-bold" style={{ fontFamily: "Georgia, serif", fontSize: "15px", letterSpacing: "-0.02em" }}>Stripe</span>
-                      <span className="mx-7 text-black/60 font-black uppercase" style={{ fontFamily: "Arial, sans-serif", fontSize: "13px", letterSpacing: "0.08em" }}>Coinbase</span>
-                      <span className="mx-7 text-black/60 font-semibold italic" style={{ fontFamily: "'Trebuchet MS', sans-serif", fontSize: "15px", letterSpacing: "0.01em" }}>Uniswap</span>
-                      <span className="mx-7 text-black/60 font-bold uppercase" style={{ fontFamily: "'Courier New', monospace", fontSize: "13px", letterSpacing: "0.12em" }}>Aave</span>
-                      <span className="mx-7 text-black/60" style={{ fontFamily: "Palatino, 'Book Antiqua', serif", fontSize: "16px", letterSpacing: "-0.01em" }}>Compound</span>
-                      <span className="mx-7 text-black/60" style={{ fontFamily: "Impact, 'Arial Narrow', sans-serif", fontSize: "14px", letterSpacing: "0.04em" }}>MakerDAO</span>
-                      <span className="mx-7 text-black/60 font-bold" style={{ fontFamily: "Verdana, sans-serif", fontSize: "13px", letterSpacing: "-0.03em" }}>Chainlink</span>
+                      <span className="mx-10 text-black/40 font-bold text-lg" style={{ fontFamily: "var(--font-outfit), sans-serif", letterSpacing: "-0.03em" }}>Stripe</span>
+                      <span className="mx-10 text-black/40 font-bold text-lg" style={{ fontFamily: "var(--font-outfit), sans-serif", letterSpacing: "-0.03em" }}>Coinbase</span>
+                      <span className="mx-10 text-black/40 font-bold text-lg" style={{ fontFamily: "var(--font-outfit), sans-serif", letterSpacing: "-0.03em" }}>Uniswap</span>
                     </React.Fragment>
                   ))}
                 </div>
