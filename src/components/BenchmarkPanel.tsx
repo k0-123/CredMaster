@@ -48,8 +48,8 @@ export function BenchmarkPanel({
     },
     high: {
       label: 'Above average spend',
-      color: 'text-warning-400',
-      bg: 'bg-warning-500/10 border-warning-500/20',
+      color: 'text-amber-400',
+      bg: 'bg-amber-500/10 border-amber-500/20',
       message:
         'Your team spends more per developer than 75% of ' +
         'companies your size. The recommendations above ' +
@@ -67,7 +67,7 @@ export function BenchmarkPanel({
 
   return (
     <div className="glass-card rounded-2xl p-6">
-      <h2 className="text-slate-400 text-xs font-semibold
+      <h2 className="text-slate-500 text-xs font-semibold
                      uppercase tracking-widest mb-4">
         How You Compare
       </h2>
@@ -79,7 +79,7 @@ export function BenchmarkPanel({
             {config.label}
           </span>
           <span
-            className={`text-2xl font-black
+            className={`text-2xl font-black tabular-nums
                         flex-shrink-0 ${config.color}`}
           >
             ${yourSpend}/dev
@@ -119,7 +119,7 @@ export function BenchmarkPanel({
         </div>
 
         <div className="flex justify-between
-                        text-xs mt-3 text-slate-500">
+                        text-xs mt-3 text-slate-500 tabular-nums">
           <span>25th %ile: ${benchmark.p25SpendPerDev}</span>
           <span className={`font-semibold ${config.color}`}>
             You: ${yourSpend}/dev/mo

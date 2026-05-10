@@ -21,6 +21,12 @@ export default function LeadCaptureModal({
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
   useEffect(() => {
+    // Edge Case 3: Check if already captured
+    const alreadyCaptured = localStorage.getItem(`lead-captured-${auditId}`) === 'true';
+    if (alreadyCaptured) {
+      setStatus("success");
+    }
+
     trackEvent('lead_form_opened', {
       auditId,
       totalMonthlySavings,
@@ -51,6 +57,10 @@ export default function LeadCaptureModal({
           totalAnnualSavings,
           isHighSavings: totalMonthlySavings > 500,
         });
+        
+        // Edge Case 3: Prevent duplicate submission
+        localStorage.setItem(`lead-captured-${auditId}`, 'true');
+        
         setStatus("success");
       } else {
         setStatus("error");
@@ -62,13 +72,13 @@ export default function LeadCaptureModal({
 
   if (status === "success") {
     return (
-      <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-8 text-center animate-in fade-in zoom-in duration-300">
+      <div className="bg-brand-500/10 border border-brand-500/30 rounded-2xl p-8 text-center animate-in fade-in zoom-in duration-300">
         <div className="text-4xl mb-4">🚀</div>
-        <p className="text-emerald-400 font-bold text-xl mb-2">
+        <p className="text-brand-400 font-bold text-xl mb-2">
           Report sent!
         </p>
         <p className="text-slate-400 text-sm">
-          Check your inbox. We&apos;ve sent the full breakdown to <span className="text-slate-200">{email}</span>.
+          Check your inbox. We&apos;ve sent the full breakdown to <span className="text-slate-200">{email || 'your email'}</span>.
         </p>
       </div>
     );
@@ -77,41 +87,57 @@ export default function LeadCaptureModal({
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-sm mx-auto">
       <div className="text-left">
-        <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 ml-1">
+        <label 
+          htmlFor="lead-email"
+          className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 ml-1"
+        >
           Email Address <span className="text-rose-500">*</span>
         </label>
         <input
           id="lead-email"
           type="email"
           required
+          aria-required="true"
+          aria-describedby="email-hint"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full bg-slate-900 border border-slate-700/50 rounded-xl px-4 py-3 text-white outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all placeholder:text-slate-600"
+          className="w-full bg-slate-900 border border-slate-700/50 rounded-xl px-4 py-3 text-white outline-none focus:ring-2 focus:ring-brand-500 transition-all placeholder:text-slate-600"
           placeholder="engineering@company.com"
         />
+        <p id="email-hint" className="text-slate-500 text-[10px] mt-1 ml-1">
+          We&apos;ll send your full report here
+        </p>
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div className="text-left">
-          <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 ml-1">
+          <label 
+            htmlFor="lead-company"
+            className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 ml-1"
+          >
             Company
           </label>
           <input
+            id="lead-company"
             type="text"
             value={company}
             onChange={(e) => setCompany(e.target.value)}
-            className="w-full bg-slate-900 border border-slate-700/50 rounded-xl px-4 py-3 text-white outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
+            className="w-full bg-slate-900 border border-slate-700/50 rounded-xl px-4 py-3 text-white outline-none focus:ring-2 focus:ring-brand-500 transition-all"
             placeholder="Acme Inc"
           />
         </div>
         <div className="text-left">
-          <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 ml-1">
+          <label 
+            htmlFor="lead-role"
+            className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 ml-1"
+          >
             Role
           </label>
           <input
+            id="lead-role"
             type="text"
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            className="w-full bg-slate-900 border border-slate-700/50 rounded-xl px-4 py-3 text-white outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
+            className="w-full bg-slate-900 border border-slate-700/50 rounded-xl px-4 py-3 text-white outline-none focus:ring-2 focus:ring-brand-500 transition-all"
             placeholder="CTO / VP"
           />
         </div>
@@ -130,14 +156,15 @@ export default function LeadCaptureModal({
       />
 
       {status === "error" && (
-        <p className="text-rose-400 text-xs italic">Something went wrong. Please try again.</p>
+        <p role="alert" className="text-rose-400 text-xs italic">Something went wrong. Please try again.</p>
       )}
 
       <button
         id="send-report"
         type="submit"
+        aria-label="Send audit report to my email"
         disabled={status === "loading"}
-        className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-60 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-indigo-600/20 active:scale-[0.98]"
+        className="w-full bg-brand-500 hover:bg-brand-600 disabled:opacity-60 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-brand-500/20 active:scale-[0.98]"
       >
         {status === "loading" ? (
           <span className="flex items-center justify-center gap-2">

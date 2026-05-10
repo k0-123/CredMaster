@@ -1,47 +1,60 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono, Outfit, Instrument_Serif } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Inter, JetBrains_Mono } from 'next/font/google';
+import './globals.css';
+import { PageViewTracker } from '@/components/PageViewTracker';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin"],
-});
-
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
-  weight: "400",
-  subsets: ["latin"],
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: "CredMaster — AI Spend Auditor",
+  title: 'CredMaster — AI Spend Auditor',
   description:
-    "Find waste in your team's AI tool subscriptions. Get a free 60-second audit with actionable savings recommendations.",
+    'Find out where your team is wasting money ' +
+    'on AI tools. Free 60-second audit. ' +
+    'No login required.',
+  openGraph: {
+    title: 'CredMaster — AI Spend Auditor',
+    description:
+      'Find out where your team is wasting money ' +
+      'on AI tools. Free 60-second audit.',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'CredMaster — AI Spend Auditor',
+    description:
+      'Find out where your team is wasting money ' +
+      'on AI tools. Free 60-second audit.',
+  },
 };
-
-import { PageViewTracker } from "@/components/PageViewTracker";
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable} ${instrumentSerif.variable} h-full antialiased dark`}
-    >
-      <body className="min-h-full flex flex-col bg-slate-950 text-white">
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
+      <body className={inter.className}>
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only
+                     focus:absolute focus:top-4
+                     focus:left-4 focus:z-50
+                     bg-brand-500 text-white
+                     px-4 py-2 rounded-lg"
+        >
+          Skip to content
+        </a>
         <PageViewTracker />
         {children}
       </body>

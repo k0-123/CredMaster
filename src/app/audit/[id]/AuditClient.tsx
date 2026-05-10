@@ -4,8 +4,6 @@ import Link from "next/link";
 import { useEffect, useState, useMemo } from "react";
 import type { AuditResult } from "@/lib/types";
 import AuditResults from "@/components/AuditResults";
-import LeadCaptureModal from "@/components/LeadCaptureModal";
-import ShareButton from "@/components/ShareButton";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Footer } from "@/components/Footer";
 import { trackEvent } from "@/lib/analytics";
@@ -14,7 +12,12 @@ import { LogoIcon } from "@/components/LogoIcon";
 
 const BenchmarkPanel = dynamic(
   () => import('@/components/BenchmarkPanel')
-    .then(m => ({ default: m.BenchmarkPanel })),
+    .then(m => m.BenchmarkPanel),
+  { ssr: false, loading: () => null }
+)
+
+const LeadCaptureModal = dynamic(
+  () => import('@/components/LeadCaptureModal'),
   { ssr: false, loading: () => null }
 )
 
@@ -26,6 +29,7 @@ export default function AuditClient({ id }: AuditClientProps) {
   const [audit, setAudit] = useState<AuditResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [countdown, setCountdown] = useState(3);
 
   // AI summary state
   const [fetchedAiSummary, setFetchedAiSummary] = useState<string | null>(null);
@@ -64,6 +68,22 @@ export default function AuditClient({ id }: AuditClientProps) {
     }
     fetchAudit();
   }, [id]);
+
+  // Edge Case 1: Auto-redirect on not-found
+  useEffect(() => {
+    if (!notFound) return;
+    const interval = setInterval(() => {
+      setCountdown(prev => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          window.location.href = '/';
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [notFound]);
 
   // Fetch AI summary after audit loads
   useEffect(() => {
@@ -105,18 +125,19 @@ export default function AuditClient({ id }: AuditClientProps) {
 
   if (notFound) {
     return (
-      <div className="min-h-screen bg-[#F5F5F5] text-black flex items-center justify-center px-6">
+      <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center px-6">
         <div className="text-center max-w-md">
-          <div className="w-20 h-20 bg-white rounded-3xl shadow-xl flex items-center justify-center mx-auto mb-8">
-            <span className="text-4xl">?</span>
+          <div className="w-20 h-20 bg-slate-900 rounded-3xl shadow-xl flex items-center justify-center mx-auto mb-8 border border-white/10">
+            <span className="text-4xl text-slate-400">?</span>
           </div>
-          <h1 className="text-4xl font-medium mb-4 tracking-tight" style={{ letterSpacing: "-0.03em" }}>Audit not found</h1>
-          <p className="text-gray-500 mb-8 leading-relaxed">
-            This audit may have expired or the link is invalid. Please run a new audit to get fresh results.
+          <h1 className="text-4xl font-medium mb-4 tracking-tight">Audit not found</h1>
+          <p className="text-slate-400 mb-8 leading-relaxed">
+            This audit may have expired or the link is incorrect.
+            Redirecting in {countdown} second{countdown !== 1 ? 's' : ''}...
           </p>
           <Link
             href="/"
-            className="inline-flex items-center gap-3 bg-black text-white font-medium px-8 py-4 rounded-full hover:bg-gray-800 transition-all"
+            className="inline-flex items-center gap-3 bg-brand-500 text-white font-medium px-8 py-4 rounded-full hover:bg-brand-600 transition-all"
           >
             ← Back to Home
           </Link>
@@ -125,19 +146,21 @@ export default function AuditClient({ id }: AuditClientProps) {
     );
   }
 
+  const ShareButton = dynamic(() => import('@/components/ShareButton'), { ssr: false });
+
   return (
-    <div className="min-h-screen bg-[#F5F5F5] text-black">
+    <div className="min-h-screen bg-slate-950 text-white">
       {/* Results Navbar */}
-      <nav className="border-b border-gray-200 backdrop-blur-md sticky top-0 z-50 bg-[#F5F5F5]/80">
+      <nav className="border-b border-white/10 backdrop-blur-md sticky top-0 z-50 bg-slate-950/80">
         <div className="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group">
-            <LogoIcon className="w-6 h-6 text-black" />
-            <span className="text-xl font-medium tracking-tight group-hover:text-gray-600 transition-colors">
+            <LogoIcon className="w-6 h-6 text-white" />
+            <span className="text-xl font-medium tracking-tight group-hover:text-slate-400 transition-colors">
               CredMaster
             </span>
           </Link>
           <div className="flex items-center gap-4">
-             <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 hidden sm:inline">
+             <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 hidden sm:inline">
               Audit ID: {id.substring(0, 8)}
             </span>
             <ShareButton />
@@ -145,35 +168,35 @@ export default function AuditClient({ id }: AuditClientProps) {
         </div>
       </nav>
 
-      <main className="max-w-4xl mx-auto px-6 py-16">
+      <main id="main" className="max-w-4xl mx-auto px-6 py-16">
         <ErrorBoundary>
           {loading ? (
             <div className="animate-pulse space-y-12">
-               <div className="h-64 bg-white rounded-3xl border border-gray-100" />
+               <div className="h-64 bg-slate-900 rounded-3xl border border-white/5" />
                <div className="space-y-4">
-                  <div className="h-8 w-48 bg-gray-200 rounded-lg" />
+                  <div className="h-8 w-48 bg-slate-800 rounded-lg" />
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="h-48 bg-white rounded-2xl border border-gray-100" />
-                    <div className="h-48 bg-white rounded-2xl border border-gray-100" />
+                    <div className="h-48 bg-slate-900 rounded-2xl border border-white/5" />
+                    <div className="h-48 bg-slate-900 rounded-2xl border border-white/5" />
                   </div>
                </div>
             </div>
           ) : audit ? (
             <div className="space-y-12">
               {/* AI Summary Section */}
-              <section className="bg-white border border-gray-100 rounded-3xl p-8 md:p-12 shadow-xl shadow-gray-200/40 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-2 h-full bg-emerald-500" />
-                <h2 className="text-2xl font-medium text-black mb-6 flex items-center gap-3 tracking-tight" style={{ letterSpacing: "-0.02em" }}>
-                  <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+              <section className="glass-card rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-2 h-full bg-brand-500" />
+                <h2 className="text-2xl font-medium text-white mb-6 flex items-center gap-3 tracking-tight">
+                  <span className="w-2 h-2 bg-brand-500 rounded-full animate-pulse" />
                   AI Intelligence Summary
                 </h2>
                 {summaryLoading && !aiSummary ? (
-                  <div className="flex items-center gap-4 text-gray-400 font-medium">
-                    <span className="w-5 h-5 border-2 border-gray-100 border-t-black rounded-full animate-spin" />
+                  <div className="flex items-center gap-4 text-slate-400 font-medium">
+                    <span className="w-5 h-5 border-2 border-white/10 border-t-brand-500 rounded-full animate-spin" />
                     Analyzing your tool stack pattern...
                   </div>
                 ) : (
-                  <p className="text-gray-600 text-lg leading-relaxed italic font-medium">
+                  <p className="text-slate-300 text-lg leading-relaxed italic font-medium">
                     &quot;{aiSummary}&quot;
                   </p>
                 )}
@@ -191,14 +214,14 @@ export default function AuditClient({ id }: AuditClientProps) {
               <AuditResults audit={audit} />
 
               {/* Email Capture Section */}
-              <section className="bg-black rounded-[2.5rem] p-10 md:p-16 text-center text-white relative overflow-hidden">
+              <section className="bg-slate-900 border border-white/10 rounded-[2.5rem] p-10 md:p-16 text-center text-white relative overflow-hidden">
                 {/* Decorative background glow */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-emerald-500/10 blur-[120px] pointer-events-none" />
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-brand-500/10 blur-[120px] pointer-events-none" />
                 
-                <h2 className="text-3xl md:text-5xl font-medium mb-6 relative z-10 tracking-tight" style={{ letterSpacing: "-0.03em" }}>
+                <h2 className="text-3xl md:text-5xl font-medium mb-6 relative z-10 tracking-tight">
                   Get the full<br />efficiency report.
                 </h2>
-                <p className="text-white/60 text-lg mb-10 max-w-md mx-auto relative z-10">
+                <p className="text-slate-400 text-lg mb-10 max-w-md mx-auto relative z-10">
                   We&apos;ll email you the step-by-step consolidation plan and notify you when new savings apply.
                 </p>
                 <div className="relative z-10">

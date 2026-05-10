@@ -119,6 +119,9 @@ export default function SpendForm() {
         ),
       });
 
+      // Edge Case 4: Clear form state after submission
+      localStorage.removeItem('credmaster-form-v1');
+      
       router.push(`/audit/${data.id}`);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -128,10 +131,17 @@ export default function SpendForm() {
 
   return (
     <div id="audit-form" className="w-full">
-      <div className="bg-white rounded-3xl overflow-hidden">
+      <div className="bg-white rounded-3xl overflow-hidden p-8 sm:p-10 shadow-2xl">
         {/* Progress header */}
         <div className="flex items-center justify-between mb-10">
-          <div className="flex gap-1.5">
+          <div 
+            role="progressbar"
+            aria-valuenow={step}
+            aria-valuemin={1}
+            aria-valuemax={3}
+            aria-label={`Step ${step} of 3`}
+            className="flex gap-1.5"
+          >
             {[1, 2, 3].map((s) => (
               <div
                 key={s}
@@ -150,29 +160,50 @@ export default function SpendForm() {
             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Team Size</label>
+                  <label 
+                    htmlFor="teamSize"
+                    className="text-sm font-semibold text-gray-500 uppercase tracking-wider block"
+                  >
+                    Team Size
+                  </label>
                   <input
+                    id="teamSize"
                     type="number"
                     min={1}
+                    max={500}
+                    aria-describedby="teamSize-hint"
                     className="w-full bg-[#F5F5F5] border-none rounded-2xl px-6 py-4 text-black text-lg font-medium focus:ring-2 focus:ring-black outline-none transition-all"
                     value={formData.teamSize || ''}
                     onChange={(e) => setFormData({ ...formData, teamSize: +e.target.value })}
                   />
+                  <p id="teamSize-hint" className="text-gray-400 text-xs mt-1">
+                    Total people in your company
+                  </p>
                   {formData.teamSize < 1 && (
-                    <p className="text-red-500 text-xs mt-1" role="alert">
+                    <p className="text-red-500 text-xs mt-1" role="alert" aria-live="polite">
                       Please enter your team size
                     </p>
                   )}
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Engineer Count</label>
+                  <label 
+                    htmlFor="engineerCount"
+                    className="text-sm font-semibold text-gray-500 uppercase tracking-wider block"
+                  >
+                    Engineer Count
+                  </label>
                   <input
+                    id="engineerCount"
                     type="number"
                     min={0}
+                    aria-describedby="engineerCount-hint"
                     className="w-full bg-[#F5F5F5] border-none rounded-2xl px-6 py-4 text-black text-lg font-medium focus:ring-2 focus:ring-black outline-none transition-all"
                     value={formData.engineerCount || ''}
                     onChange={(e) => setFormData({ ...formData, engineerCount: +e.target.value })}
                   />
+                  <p id="engineerCount-hint" className="text-gray-400 text-xs mt-1">
+                    Number of developers/engineers
+                  </p>
                   {formData.engineerCount > formData.teamSize && formData.teamSize > 0 && (
                     <p
                       className="text-red-500 text-xs mt-1"
@@ -182,8 +213,8 @@ export default function SpendForm() {
                       Engineer count cannot exceed team size
                     </p>
                   )}
-                  {formData.engineerCount < 1 && (
-                     <p className="text-red-500 text-xs mt-1" role="alert">
+                  {formData.engineerCount < 1 && step === 1 && (
+                     <p className="text-red-500 text-xs mt-1" role="alert" aria-live="polite">
                        Please enter your engineer count
                      </p>
                   )}
@@ -191,11 +222,13 @@ export default function SpendForm() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Primary Use Case</label>
+                <span className="text-sm font-semibold text-gray-500 uppercase tracking-wider block">Primary Use Case</span>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {["coding", "writing", "data", "research", "mixed"].map((useCase) => (
                     <button
                       key={useCase}
+                      type="button"
+                      aria-pressed={formData.primaryUseCase === useCase}
                       onClick={() => setFormData({ ...formData, primaryUseCase: useCase as AuditInput["primaryUseCase"] })}
                       className={`px-4 py-3 rounded-2xl text-sm font-medium transition-all ${
                         formData.primaryUseCase === useCase 
@@ -210,6 +243,8 @@ export default function SpendForm() {
               </div>
 
               <button
+                type="button"
+                aria-label="Continue to tool selection"
                 onClick={goToStep2}
                 disabled={
                   formData.teamSize < 1 || 
@@ -234,8 +269,10 @@ export default function SpendForm() {
                     <button
                       key={t.id}
                       type="button"
+                      aria-label={`Select ${t.name}`}
+                      aria-pressed={on}
                       onClick={() => setSelectedTools((prev) => on ? prev.filter((x) => x !== t.id) : [...prev, t.id])}
-                      className={`flex flex-col items-center gap-4 p-6 rounded-3xl border-2 transition-all ${
+                      className={`flex flex-col items-center gap-4 p-6 rounded-3xl border-2 transition-all relative ${
                         on ? "border-black bg-black text-white" : "border-gray-100 bg-[#F5F5F5] hover:border-gray-200 text-black"
                       }`}
                     >
@@ -251,12 +288,16 @@ export default function SpendForm() {
 
               <div className="flex gap-4">
                 <button
+                  type="button"
+                  aria-label="Back to team info"
                   onClick={() => setStep(1)}
                   className="flex items-center justify-center w-16 h-16 rounded-full bg-[#F5F5F5] text-black hover:bg-gray-200 transition-all"
                 >
                   <ChevronLeft className="w-6 h-6" />
                 </button>
                 <button
+                  type="button"
+                  aria-label="Continue to spend details"
                   onClick={goToStep3}
                   disabled={selectedTools.length === 0}
                   className="flex-1 bg-black text-white font-medium py-5 rounded-full hover:bg-gray-800 disabled:opacity-30 transition-all flex items-center justify-center gap-2 text-lg group"
@@ -271,7 +312,8 @@ export default function SpendForm() {
           {/* ═══ STEP 3 — Spend details ═══ */}
           {step === 3 && (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
-              <div className="space-y-4">
+              {/* Mobile Fix 5: Scrollable tool list */}
+              <div className="space-y-4 max-h-[55vh] overflow-y-auto pr-1 -mr-1">
                 {formData.tools.map((entry, i) => {
                   const pricing = PRICING_DATA[entry.tool];
                   const plans = Object.keys(pricing);
@@ -288,8 +330,15 @@ export default function SpendForm() {
 
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div className="space-y-1.5">
-                          <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Plan</label>
+                          <label 
+                            htmlFor={`plan-${entry.tool}`}
+                            className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block"
+                          >
+                            Plan
+                          </label>
                           <select
+                            id={`plan-${entry.tool}`}
+                            aria-label={`Select plan for ${meta.name}`}
                             className="w-full bg-white border-none rounded-xl px-4 py-3 text-sm font-semibold text-black outline-none focus:ring-2 focus:ring-black"
                             value={entry.plan}
                             onChange={(e) => updateTool(i, { plan: e.target.value })}
@@ -298,8 +347,14 @@ export default function SpendForm() {
                           </select>
                         </div>
                         <div className="space-y-1.5">
-                          <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Seats</label>
+                          <label 
+                            htmlFor={`seats-${entry.tool}`}
+                            className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block"
+                          >
+                            Seats
+                          </label>
                           <input
+                            id={`seats-${entry.tool}`}
                             type="number"
                             min={1}
                             className="w-full bg-white border-none rounded-xl px-4 py-3 text-sm font-semibold text-black outline-none focus:ring-2 focus:ring-black"
@@ -308,8 +363,14 @@ export default function SpendForm() {
                           />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Monthly ($)</label>
+                          <label 
+                            htmlFor={`spend-${entry.tool}`}
+                            className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block"
+                          >
+                            Monthly ($)
+                          </label>
                           <input
+                            id={`spend-${entry.tool}`}
                             type="number"
                             min={0}
                             className="w-full bg-white border-none rounded-xl px-4 py-3 text-sm font-semibold text-black outline-none focus:ring-2 focus:ring-black"
@@ -323,12 +384,31 @@ export default function SpendForm() {
                 })}
               </div>
 
-              {error && <div className="bg-red-50 text-red-500 p-5 rounded-2xl text-sm font-medium border border-red-100">{error}</div>}
+              {error && (
+                <div 
+                  role="alert"
+                  aria-live="polite"
+                  className="bg-red-50 text-red-500 p-5 rounded-2xl text-sm font-medium border border-red-100"
+                >
+                  {error}
+                </div>
+              )}
 
-              <input type="text" name="website" className="hidden" tabIndex={-1} value={hpValue} onChange={(e) => setHpValue(e.target.value)} />
+              <input 
+                type="text" 
+                name="website" 
+                aria-hidden="true" 
+                tabIndex={-1} 
+                className="hidden" 
+                autoComplete="off"
+                value={hpValue} 
+                onChange={(e) => setHpValue(e.target.value)} 
+              />
 
               <div className="flex gap-4">
                 <button
+                  type="button"
+                  aria-label="Back to tool selection"
                   onClick={() => setStep(2)}
                   disabled={loading}
                   className="flex items-center justify-center w-16 h-16 rounded-full bg-[#F5F5F5] text-black hover:bg-gray-200 transition-all"
@@ -336,11 +416,13 @@ export default function SpendForm() {
                   <ChevronLeft className="w-6 h-6" />
                 </button>
                 <button
+                  type="button"
+                  aria-label="Submit audit and see results"
                   onClick={submit}
                   disabled={loading}
                   className="flex-1 bg-black text-white font-medium py-5 rounded-full hover:bg-gray-800 disabled:opacity-30 transition-all flex items-center justify-center gap-2 text-lg group"
                 >
-                  {loading ? <span className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : "Generate Report"}
+                  {loading ? <span className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : "Run My Audit →"}
                 </button>
               </div>
             </div>

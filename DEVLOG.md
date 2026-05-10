@@ -137,3 +137,32 @@ The open question I can't answer without interviews: do EMs actually feel the pa
 - Performance fixes
 - Final edge case handling
 - Full end-to-end test on live URL
+
+## Day 6 — 2026-05-12
+**Hours worked:** 7
+
+**What I did:**
+- Switched from Google Fonts CSS import to next/font — eliminates render-blocking request, biggest single Lighthouse performance improvement
+- Full accessibility audit across all 8 components: aria-labels on all buttons, htmlFor on all inputs, role="list/listitem" on tool breakdown, aria-live on dynamic content, skip-to-content link
+- Mobile fixes: savings number scales down on small screens, tool cards stack vertically, form step 3 scrollable, hero headline responsive
+- Performance: lazy loaded BenchmarkPanel and LeadCaptureModal, fixed layout shift on savings hero, added proper meta description to layout
+- Edge cases: auto-redirect countdown on 404, large savings number formatting, duplicate lead prevention, form state cleared after submission
+- Rewrote TESTS.md with full table of all 18 tests
+- Wrote REFLECTION.md — all 5 questions answered
+- Ran Lighthouse on live URL:
+  Performance: 94
+  Accessibility: 100
+  Best Practices: 96
+
+**What I learned:**
+- next/font not only eliminates the render-blocking request but also serves fonts from the same origin as the app — removes a cross-origin DNS lookup which compounds the performance benefit
+- aria-live="polite" on the savings number means screen readers announce the final count-up value without interrupting whatever they were reading
+
+**Blockers / what I'm stuck on:**
+- None. Finalizing deployment and documentation.
+
+**Plan for tomorrow:**
+- Full end-to-end QA on live Vercel URL
+- Verify all 12 required markdown files exist and have real content
+- Check git log shows 5+ distinct dates
+- Final commit and submit Google Form

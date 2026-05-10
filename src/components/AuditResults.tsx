@@ -11,10 +11,16 @@ export default function AuditResults({ audit }: { audit: AuditResult }) {
       />
 
       <div className="space-y-4">
-        <h2 className="text-2xl font-medium text-black tracking-tight" style={{ letterSpacing: "-0.02em" }}>Per-Tool Breakdown</h2>
-        {audit.toolResults.map((r) => (
-          <ToolBreakdownCard key={r.tool} result={r} />
-        ))}
+        <h2 className="text-2xl font-medium text-white tracking-tight">Per-Tool Breakdown</h2>
+        <div 
+          role="list" 
+          aria-label="Tool audit results"
+          className="space-y-4"
+        >
+          {audit.toolResults.map((r) => (
+            <ToolBreakdownCard key={r.tool} result={r} />
+          ))}
+        </div>
       </div>
     </div>
   );

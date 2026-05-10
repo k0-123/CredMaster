@@ -37,8 +37,9 @@ export default function ShareButton() {
     <div className="flex items-center gap-2">
       <button
         id="share-button"
+        aria-label={copied ? 'Link copied to clipboard' : 'Copy audit link to clipboard'}
         onClick={copy}
-        className="inline-flex items-center gap-2 bg-white hover:bg-gray-50 border border-gray-200 text-black font-medium px-5 py-2.5 rounded-full transition-colors shadow-sm"
+        className="inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium px-5 py-2.5 rounded-full transition-colors shadow-sm"
       >
         {copied ? (
           <>
@@ -59,7 +60,8 @@ export default function ShareButton() {
 
       <button
         onClick={shareOnTwitter}
-        className="p-2.5 rounded-full bg-white border border-gray-200 text-black hover:bg-gray-50 shadow-sm transition-all"
+        aria-label="Share audit results on X (Twitter)"
+        className="p-2.5 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 shadow-sm transition-all"
         title="Share on X"
       >
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
