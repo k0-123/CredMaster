@@ -26,6 +26,23 @@ export function runAudit(
 
     let recommendation: Recommendation | null = null;
 
+    // ── GUARD — ZERO SPEND ──
+    if (monthlySpend === 0 && plan !== "free" && plan !== "hobby") {
+      toolResults.push({
+        tool,
+        plan,
+        currentMonthlySpend: 0,
+        recommendation: {
+          type: "optimal",
+          reason:
+            "No spend recorded for this tool. If you are on a paid plan, update your monthly spend for an accurate audit.",
+          savingsPerMonth: 0,
+        },
+        savingsPerMonth: 0,
+      });
+      continue;
+    }
+
     // ── RULE 4 — TOOL OVERLAP (checked first so it can override) ──
 
     // 4a: cursor + copilot → copilot is redundant
@@ -174,6 +191,77 @@ export function runAudit(
         suggestedPlan: "pro",
       };
     }
+    // ── RULE 7 — RETAIL VS CREDITS ──
+    if (!recommendation) {
+      // Case A: Claude Pro/Max + Anthropic API
+      if (
+        tool === "claude" &&
+        (plan === "pro" || plan === "max") &&
+        (input.primaryUseCase === "coding" || input.primaryUseCase === "data") &&
+        activeToolNames.includes("anthropic-api")
+      ) {
+        recommendation = {
+          type: "switch",
+          reason:
+            "You are paying $20-100/month for Claude.ai Pro/Max while also using the Anthropic API directly. For coding and data workflows, API access gives the same models at pay-as-you-go rates. If your usage is under $20/month in API calls, drop the subscription and use API credits only.",
+          savingsPerMonth: monthlySpend,
+          suggestedTool: "anthropic-api",
+          suggestedPlan: "pay-as-you-go",
+        };
+      }
+
+      // Case B: ChatGPT Plus + OpenAI API
+      if (
+        !recommendation &&
+        tool === "chatgpt" &&
+        plan === "plus" &&
+        (input.primaryUseCase === "coding" || input.primaryUseCase === "data") &&
+        activeToolNames.includes("openai-api")
+      ) {
+        recommendation = {
+          type: "switch",
+          reason:
+            "You are paying $20/month for ChatGPT Plus while also using the OpenAI API directly. API credits give the same GPT-4o access at pay-as-you-go rates. Teams doing coding or data work rarely need the ChatGPT web UI if they already have API access.",
+          savingsPerMonth: monthlySpend,
+          suggestedTool: "openai-api",
+          suggestedPlan: "pay-as-you-go",
+        };
+      }
+
+      // Case C: Gemini Pro/Ultra + API Overlap
+      if (
+        !recommendation &&
+        tool === "gemini" &&
+        (plan === "pro" || plan === "ultra") &&
+        (activeToolNames.includes("openai-api") || activeToolNames.includes("anthropic-api"))
+      ) {
+        recommendation = {
+          type: "switch",
+          reason:
+            "Gemini Pro/Ultra overlaps significantly with the API access you already have. Unless your team specifically needs Google Workspace integration or Gemini's unique multimodal features, consolidating to your existing API provider eliminates this $19-30/month redundancy.",
+          savingsPerMonth: monthlySpend,
+          suggestedTool: activeToolNames.includes("anthropic-api") ? "anthropic-api" : "openai-api",
+          suggestedPlan: "pay-as-you-go",
+        };
+      }
+
+      // Case D: General credits awareness (Claude Pro teams)
+      if (
+        !recommendation &&
+        tool === "claude" &&
+        plan === "pro" &&
+        seats >= 3 &&
+        input.primaryUseCase !== "writing"
+      ) {
+        recommendation = {
+          type: "downgrade",
+          reason:
+            "For teams of 3+ primarily doing non-writing work, Anthropic API credits often cost less than multiple Pro subscriptions at $20/seat. At moderate usage, $60/month in API credits goes further than 3 Pro seats and gives programmatic access.",
+          savingsPerMonth: Math.round(monthlySpend * 0.3),
+          suggestedPlan: "api-credits",
+        };
+      }
+    }
 
     // ── RULE 6 — ALREADY OPTIMAL ──
     if (!recommendation) {
@@ -223,7 +311,7 @@ export function generateFallbackSummary(audit: Partial<AuditResult> & { input: A
   const totalMonthlySpend = audit.input.tools.reduce((s, t) => s + t.monthlySpend, 0);
 
   if (audit.totalMonthlySavings === 0) {
-    return `Your team's AI tool spend appears well-optimized. Across ${audit.toolResults.length} tools reviewed, all plans are appropriately sized for your team of ${audit.input.teamSize}. Continue monitoring as your team grows — plan tiers that fit today may become inefficient as headcount changes.`;
+    return `Your team\'s AI tool spend appears well-optimized. Across ${audit.toolResults.length} tools reviewed, all plans are appropriately sized for your team of ${audit.input.teamSize}. Continue monitoring as your team grows — plan tiers that fit today may become inefficient as headcount changes.`;
   }
 
   return `Your team of ${audit.input.teamSize} is currently spending $${totalMonthlySpend}/month across ${audit.toolResults.length} AI tools. Our analysis found $${audit.totalMonthlySavings}/month ($${audit.totalAnnualSavings}/year) in potential savings. The largest opportunity is ${topRec?.tool}: ${topRec?.recommendation.reason ?? 'plan optimization'}. Addressing this requires no workflow changes — only a plan adjustment.`;

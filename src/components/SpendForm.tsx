@@ -155,9 +155,14 @@ export default function SpendForm() {
                     type="number"
                     min={1}
                     className="w-full bg-[#F5F5F5] border-none rounded-2xl px-6 py-4 text-black text-lg font-medium focus:ring-2 focus:ring-black outline-none transition-all"
-                    value={formData.teamSize}
-                    onChange={(e) => setFormData({ ...formData, teamSize: Math.max(1, +e.target.value || 1) })}
+                    value={formData.teamSize || ''}
+                    onChange={(e) => setFormData({ ...formData, teamSize: +e.target.value })}
                   />
+                  {formData.teamSize < 1 && (
+                    <p className="text-red-500 text-xs mt-1" role="alert">
+                      Please enter your team size
+                    </p>
+                  )}
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Engineer Count</label>
@@ -165,9 +170,23 @@ export default function SpendForm() {
                     type="number"
                     min={0}
                     className="w-full bg-[#F5F5F5] border-none rounded-2xl px-6 py-4 text-black text-lg font-medium focus:ring-2 focus:ring-black outline-none transition-all"
-                    value={formData.engineerCount}
-                    onChange={(e) => setFormData({ ...formData, engineerCount: Math.max(0, +e.target.value || 0) })}
+                    value={formData.engineerCount || ''}
+                    onChange={(e) => setFormData({ ...formData, engineerCount: +e.target.value })}
                   />
+                  {formData.engineerCount > formData.teamSize && formData.teamSize > 0 && (
+                    <p
+                      className="text-red-500 text-xs mt-1"
+                      role="alert"
+                      aria-live="polite"
+                    >
+                      Engineer count cannot exceed team size
+                    </p>
+                  )}
+                  {formData.engineerCount < 1 && (
+                     <p className="text-red-500 text-xs mt-1" role="alert">
+                       Please enter your engineer count
+                     </p>
+                  )}
                 </div>
               </div>
 
@@ -177,7 +196,7 @@ export default function SpendForm() {
                   {["coding", "writing", "data", "research", "mixed"].map((useCase) => (
                     <button
                       key={useCase}
-                      onClick={() => setFormData({ ...formData, primaryUseCase: useCase as any })}
+                      onClick={() => setFormData({ ...formData, primaryUseCase: useCase as AuditInput["primaryUseCase"] })}
                       className={`px-4 py-3 rounded-2xl text-sm font-medium transition-all ${
                         formData.primaryUseCase === useCase 
                           ? "bg-black text-white shadow-xl shadow-black/10" 
@@ -192,7 +211,12 @@ export default function SpendForm() {
 
               <button
                 onClick={goToStep2}
-                className="w-full bg-black text-white font-medium py-5 rounded-full hover:bg-gray-800 transition-all flex items-center justify-center gap-2 text-lg group"
+                disabled={
+                  formData.teamSize < 1 || 
+                  formData.engineerCount < 1 || 
+                  formData.engineerCount > formData.teamSize
+                }
+                className="w-full bg-black text-white font-medium py-5 rounded-full hover:bg-gray-800 disabled:opacity-30 transition-all flex items-center justify-center gap-2 text-lg group"
               >
                 Continue
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

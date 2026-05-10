@@ -7,10 +7,16 @@ import AuditResults from "@/components/AuditResults";
 import LeadCaptureModal from "@/components/LeadCaptureModal";
 import ShareButton from "@/components/ShareButton";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { AuditResultsSkeleton } from "@/components/LoadingSkeleton";
-import { LogoIcon } from "@/components/LogoIcon";
 import { Footer } from "@/components/Footer";
 import { trackEvent } from "@/lib/analytics";
+import dynamic from 'next/dynamic'
+import { LogoIcon } from "@/components/LogoIcon";
+
+const BenchmarkPanel = dynamic(
+  () => import('@/components/BenchmarkPanel')
+    .then(m => ({ default: m.BenchmarkPanel })),
+  { ssr: false, loading: () => null }
+)
 
 interface AuditClientProps {
   id: string;
@@ -154,9 +160,6 @@ export default function AuditClient({ id }: AuditClientProps) {
             </div>
           ) : audit ? (
             <div className="space-y-12">
-              {/* Main Results */}
-              <AuditResults audit={audit} />
-
               {/* AI Summary Section */}
               <section className="bg-white border border-gray-100 rounded-3xl p-8 md:p-12 shadow-xl shadow-gray-200/40 relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-2 h-full bg-emerald-500" />
@@ -171,10 +174,21 @@ export default function AuditClient({ id }: AuditClientProps) {
                   </div>
                 ) : (
                   <p className="text-gray-600 text-lg leading-relaxed italic font-medium">
-                    &ldquo;{aiSummary}&rdquo;
+                    &quot;{aiSummary}&quot;
                   </p>
                 )}
               </section>
+
+              <BenchmarkPanel
+                totalMonthlySpend={audit.input.tools.reduce(
+                  (sum, t) => sum + t.monthlySpend, 0
+                )}
+                engineerCount={audit.input.engineerCount}
+                teamSize={audit.input.teamSize}
+              />
+
+              {/* Main Results & Tool Breakdown */}
+              <AuditResults audit={audit} />
 
               {/* Email Capture Section */}
               <section className="bg-black rounded-[2.5rem] p-10 md:p-16 text-center text-white relative overflow-hidden">

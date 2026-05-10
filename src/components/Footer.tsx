@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { LogoIcon } from "./LogoIcon";
-import { ArrowRight, Globe, MessageSquare, Share2, Mail } from "lucide-react";
+import { Globe, MessageSquare, Share2, Mail } from "lucide-react";
 
 export const Footer = () => {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -17,7 +16,7 @@ export const Footer = () => {
             "viewBox",
             `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`
           );
-        } catch (e) {
+        } catch {
           // ignore
         }
       }

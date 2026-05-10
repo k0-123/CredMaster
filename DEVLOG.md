@@ -107,3 +107,33 @@ The open question I can't answer without interviews: do EMs actually feel the pa
 - ARCHITECTURE.md with Mermaid diagram (form → validation → audit engine → results → email capture → Supabase → Resend)
 - Add 2 more unit tests to audit calculation logic (edge cases: 0 seats, single tool, team size larger than seat count)
 
+---
+
+## Day 5 — 2026-05-11
+**Hours worked:** 8
+
+**What I did:**
+- Added Rule 7 (retail vs credits) to audit engine — this was a gap identified against the assignment rubric. Now covers all 4 evaluation criteria the PDF specifies per tool.
+- Built BenchmarkPanel with visual bar showing spend per developer vs industry p25/p75 for 4 company size buckets
+- Created benchmarks.ts with getBenchmarkPosition helper function
+- Added form validation: engineerCount > teamSize now shows inline error and blocks submission
+- Added zero spend guard to audit engine
+- Added 3 new tests (total: 18)
+- Updated PRICING_DATA.md with API credits break-even analysis
+- Completed user interviews (see USER_INTERVIEWS.md)
+- Wrote USER_INTERVIEWS.md and ARCHITECTURE.md with Mermaid diagram
+
+**What I learned:**
+- Segmenting benchmarks by both company size and role-specific headcount (engineers) provides much more granular value to users than a simple "spend per employee" metric.
+- Dynamic imports are crucial for maintaining a fast initial load when adding data-heavy visualization components.
+
+**Blockers / what I'm stuck on:**
+- None. Project is functionally complete against the original rubric.
+
+**Plan for tomorrow:**
+- REFLECTION.md — all 5 questions
+- Lighthouse audit and fix scores
+- Accessibility sweep
+- Performance fixes
+- Final edge case handling
+- Full end-to-end test on live URL

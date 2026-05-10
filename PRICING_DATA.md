@@ -38,3 +38,32 @@ All prices are per-seat, per-month (USD) unless otherwise noted.
 - Free: $0/user/month — https://codeium.com/windsurf/pricing — verified 2025-01-15
 - Pro: $15/user/month — https://codeium.com/windsurf/pricing — verified 2025-01-15
 - Team: $35/user/month — https://codeium.com/windsurf/pricing — verified 2025-01-15
+
+## API Credits vs Subscriptions
+
+### Anthropic API
+- Input tokens: $3.00 per million (claude-sonnet-4)
+- Output tokens: $15.00 per million (claude-sonnet-4)
+- Source: https://www.anthropic.com/pricing
+- Verified: 2025-01-XX
+- Break-even vs Claude Pro ($20/month):
+  Approximately 1.3M input + 0.3M output tokens/month
+
+### OpenAI API
+- Input tokens: $2.50 per million (gpt-4o)
+- Output tokens: $10.00 per million (gpt-4o)
+- Source: https://openai.com/api/pricing
+- Verified: 2025-01-XX
+- Break-even vs ChatGPT Plus ($20/month):
+  Approximately 2M input + 0.5M output tokens/month
+
+### When credits beat subscriptions
+- Team doing API-first work (coding, data pipelines)
+- Usage is variable month to month
+- Already have API access for other purposes
+- Team size > 2 on same subscription tier
+
+### When subscriptions beat credits
+- Heavy daily web UI usage (writing teams)
+- Predictable spend preferred over variable billing
+- Need advanced features (Projects, memory, custom GPTs, extended context limits)

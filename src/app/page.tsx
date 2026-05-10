@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ArrowRight, Menu, X } from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
 import { LogoIcon } from "@/components/LogoIcon";
 import SpendForm from "@/components/SpendForm";
 import { Footer } from "@/components/Footer";
@@ -215,7 +215,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between">
               <p className="text-lg text-gray-700 leading-relaxed mb-8">
-                "I assumed we had this under control. Turns out we had 14 seats of Copilot for engineers who'd switched to Cursor six months ago. That's $2,100 we were just burning."
+                &quot;I assumed we had this under control. Turns out we had 14 seats of Copilot for engineers who&apos;d switched to Cursor six months ago. That&apos;s $2,100 we were just burning.&quot;
               </p>
               <div>
                 <p className="font-medium text-black">Marcus T.</p>
@@ -225,7 +225,7 @@ export default function LandingPage() {
 
             <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between">
               <p className="text-lg text-gray-700 leading-relaxed mb-8">
-                "The audit took three minutes and gave me exactly what I needed to walk into our Q2 finance review. Canceled two tools that week."
+                &quot;The audit took three minutes and gave me exactly what I needed to walk into our Q2 finance review. Canceled two tools that week.&quot;
               </p>
               <div>
                 <p className="font-medium text-black">Priya N.</p>
@@ -235,7 +235,7 @@ export default function LandingPage() {
 
             <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between">
               <p className="text-lg text-gray-700 leading-relaxed mb-8">
-                "We thought we were being screwed by seat minimums. Turns out we just had overlapping tools no one had mapped. CredMaster made it obvious."
+                &quot;We thought we were being screwed by seat minimums. Turns out we just had overlapping tools no one had mapped. CredMaster made it obvious.&quot;
               </p>
               <div>
                 <p className="font-medium text-black">Jordan K.</p>

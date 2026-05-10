@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { runAudit, generateFallbackSummary, isValidEmail } from "./auditEngine";
 import type { AuditInput } from "./types";
+import { getSpendPerDev } from "./benchmarks";
 
 describe("Audit Engine & Utilities", () => {
   // ── Existing Tests 1-8 ──
@@ -147,5 +148,44 @@ describe("Audit Engine & Utilities", () => {
     const rec = result.toolResults[0].recommendation;
     expect(rec.type).toBe("reduce-seats");
     expect(rec.type === "reduce-seats" && rec.suggestedSeats).toBe(7); // 10 * 0.7
+  });
+
+  // ── Test 16 — Credits rule: Claude Pro + Anthropic API ──
+  it("Test 16: recommends switching Claude Pro to API when Anthropic API is present", () => {
+    const input: AuditInput = {
+      tools: [
+        { tool: 'claude', plan: 'pro', monthlySpend: 20, seats: 1 },
+        { tool: 'anthropic-api', plan: 'pay-as-you-go', monthlySpend: 30, seats: 1 },
+      ],
+      teamSize: 5,
+      engineerCount: 3,
+      primaryUseCase: 'coding',
+    };
+    const result = runAudit(input);
+    const claudeRes = result.toolResults.find(r => r.tool === 'claude')!;
+    expect(claudeRes.recommendation.type).toBe('switch');
+    expect(claudeRes.recommendation.reason).toContain('API');
+  });
+
+  // ── Test 17 — Benchmark: getSpendPerDev math ──
+  it("Test 17: getSpendPerDev math", () => {
+    expect(getSpendPerDev(300, 5)).toBe(60);
+    expect(getSpendPerDev(0, 5)).toBe(0);
+    expect(getSpendPerDev(100, 0)).toBe(0); // division by zero guard
+  });
+
+  // ── Test 18 — Zero spend guard ──
+  it("Test 18: zero spend guard returns optimal with specific reason", () => {
+    const input: AuditInput = {
+      tools: [
+        { tool: 'cursor', plan: 'pro', monthlySpend: 0, seats: 2 },
+      ],
+      teamSize: 5,
+      engineerCount: 2,
+      primaryUseCase: 'coding',
+    };
+    const result = runAudit(input);
+    expect(result.toolResults[0].recommendation.type).toBe('optimal');
+    expect(result.toolResults[0].recommendation.reason).toContain('No spend recorded');
   });
 });

@@ -41,8 +41,8 @@ describe('Analytics Utility', () => {
 
   it('should not throw on server-side (window undefined)', () => {
     const originalWindow = global.window
-    // @ts-ignore
-    delete global.window
+    // @ts-expect-error - testing server-side environment where window is undefined
+    delete (global as unknown as { window?: unknown }).window
     
     expect(() => trackEvent('page_viewed')).not.toThrow()
     
