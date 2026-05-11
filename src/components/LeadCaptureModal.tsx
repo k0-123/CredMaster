@@ -18,15 +18,15 @@ export default function LeadCaptureModal({
   const [company, setCompany] = useState("");
   const [role, setRole] = useState("");
   const [website, setWebsite] = useState(""); // Honeypot
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(() => {
+    if (typeof window !== "undefined") {
+      const alreadyCaptured = localStorage.getItem(`lead-captured-${auditId}`) === 'true';
+      return alreadyCaptured ? "success" : "idle";
+    }
+    return "idle";
+  });
 
   useEffect(() => {
-    // Edge Case 3: Check if already captured
-    const alreadyCaptured = localStorage.getItem(`lead-captured-${auditId}`) === 'true';
-    if (alreadyCaptured) {
-      setStatus("success");
-    }
-
     trackEvent('lead_form_opened', {
       auditId,
       totalMonthlySavings,

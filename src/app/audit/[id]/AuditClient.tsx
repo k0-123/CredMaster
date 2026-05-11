@@ -21,6 +21,9 @@ const LeadCaptureModal = dynamic(
   { ssr: false, loading: () => null }
 )
 
+const ShareButton = dynamic(() => import('@/components/ShareButton'), { ssr: false });
+
+
 interface AuditClientProps {
   id: string;
 }
@@ -145,8 +148,6 @@ export default function AuditClient({ id }: AuditClientProps) {
       </div>
     );
   }
-
-  const ShareButton = dynamic(() => import('@/components/ShareButton'), { ssr: false });
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">

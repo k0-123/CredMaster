@@ -166,3 +166,27 @@ The open question I can't answer without interviews: do EMs actually feel the pa
 - Verify all 12 required markdown files exist and have real content
 - Check git log shows 5+ distinct dates
 - Final commit and submit Google Form
+
+## Day 7 — 2026-05-11
+**Hours worked:** 5
+
+**What I did:**
+- Full end-to-end QA on live Vercel URL: complete form flow, email delivery confirmed, share URL works in incognito, OG preview verified
+- Verified all 12 required markdown files exist with real content
+- Took 3 screenshots for README
+- Fixed OG meta tags on results page
+- Ran final npm run build and npm test — both clean
+- Verified CI is green on GitHub Actions
+- Checked git log — commits on 7 distinct days
+- Submitted Google Form
+
+**What I learned:**
+- End-to-end testing on the actual deployed URL surfaces issues that local dev never shows — environment variables missing on Vercel, Supabase RLS blocking reads, CORS on API routes
+- Writing the DEVLOG every day made the REFLECTION.md much easier to write because I had a record of every decision and blocker
+
+**Blockers / what I'm stuck on:**
+- None — submitting today
+
+**Plan for tomorrow:**
+- Wait for Round 2 invitation
+- Continue improving the codebase regardless

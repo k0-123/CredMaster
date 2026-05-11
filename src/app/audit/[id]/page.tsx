@@ -32,31 +32,34 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-  const title = auditData 
-    ? `I found $${auditData.totalMonthlySavings}/mo in AI savings` 
-    : "AI Spend Audit | CredMaster";
   
-  const description = auditData 
-    ? `See how this ${auditData.teamSize}-person team can save $${auditData.totalAnnualSavings}/year on AI tools.` 
-    : "Find waste in your AI tool subscriptions and get actionable savings recommendations.";
+  if (!auditData) {
+    return {
+      title: "AI Spend Audit | CredMaster",
+      description: "Find waste in your AI tool subscriptions and get actionable savings recommendations.",
+    };
+  }
 
-  const ogImageUrl = auditData
-    ? `${appUrl}/api/og?savings=${auditData.totalMonthlySavings}&annual=${auditData.totalAnnualSavings}&tools=${auditData.toolCount}`
-    : `${appUrl}/og-default.png`;
+  const title = `I found $${auditData.totalMonthlySavings}/month in AI savings`;
+  const fullTitle = `${title} — CredMaster`;
+  const description = `${auditData.teamSize}-person team could save $${auditData.totalAnnualSavings}/year on AI tools. See how.`;
+  const ogImageUrl = `${appUrl}/api/og?savings=${auditData.totalMonthlySavings}&annual=${auditData.totalAnnualSavings}&tools=${auditData.toolCount}`;
+  const pageUrl = `${appUrl}/audit/${id}`;
 
   return {
-    title,
-    description,
+    title: fullTitle,
+    description: description,
     openGraph: {
-      title,
-      description,
+      title: title,
+      description: description,
       images: [ogImageUrl],
+      url: pageUrl,
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title,
-      description,
+      title: title,
+      description: description,
       images: [ogImageUrl],
     },
   };
